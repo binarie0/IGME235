@@ -1,0 +1,2 @@
+ErrorDocument 404 /zda9250/235/error/error.html
+DirectoryIndex noterror.html 
