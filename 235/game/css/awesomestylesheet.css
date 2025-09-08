@@ -1,0 +1,36 @@
+@charset "UTF-8";
+
+h1 { 
+    color:red;
+    font-family: sans-serif;
+    border-bottom: 1px solid blue;
+}
+p.quote { 
+    background-color: lightgray;
+    padding: 1rem;
+    margin-left: 100px;
+}
+body {
+    background: rgb(32, 146, 184);
+    font-family: "Inter", 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+h2
+{
+    color: pink;
+    font-family: sans-serif;
+}
+img.side
+{
+    float:right;
+    margin: 0 12px;
+}
+footer > p, a
+{
+    color: orange;
+}
+/*
+*
+{
+    border: 1px solid gray;
+}
+*/

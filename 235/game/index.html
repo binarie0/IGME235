@@ -4,32 +4,38 @@
 
 
     <head>
-        <style>
-        h1 { 
-            color:red;
-            font-family: sans-serif;
-            border-bottom: 1px solid blue;
-        }
-        blockquote { 
-            background-color: lightgray;
-            padding: 1rem;
-        }
-</style>
+    <link rel="stylesheet" href="./css/awesomestylesheet.css">
+    <link rel="icon" type="image/png" href="./images/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="./images/favicon-16x16.png" sizes="16x16" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <title>Dig Dug (1982)</title>
     </head>
 
 
 
     <body>
-        <main>
-            <header>
-                <h1>
-                    Dig Dug
-                </h1>
-            </header>
         
-
-        <img src="./dig-dug-burnt.png" alt="A screenshot of the game Dig Dug.">
+        <header>
+            <picture>
+                <!--The correct color to switch was the first one-->
+                <source srcset="./images/dig-dug.svg">
+                <img src="./images/dig-dug.png" alt="A picture of the title of the game Dig Dug.">
+            </picture>
+            <h1>
+                Dig Dug
+            </h1>
+            <p>
+                <a href="./big/pic1.html">
+                    <img src="./images/large.jpg" style="width: 20%; height: auto;" alt="A thumbnail of some gameplay.">
+                    <p>Check this out!</p>
+                </a>
+            </p>
+        </header>
+        <main>
+        
+        <img src="./images/screenshot.png" class="side" alt="A screenshot of the game Dig Dug.">
         <h3>
         Publishing Info
         </h3>
@@ -47,6 +53,7 @@
         The only weapon that you carry is an air pump, which you can use to inflate the monsters to the point where they explode. [...]
         </p>
         
+        <img src="./images/fygar_inflate_small.gif" alt="A picture of Fygar, an enemy, inflating the player.">
         <h3>
         Game Categories
         </h3>
@@ -57,21 +64,26 @@
             <li><i>Visual</i>: Fixed</li>
             <li><i>Gameplay</i>: Arcade</li>
         </ul>
-        <img src="./digdug.jpg" alt="A picture of the main titlecard and graphic associated with Dig Dug.">
+        <img src="./images/namcocover.jpg" class="side" alt="A picture of the main titlecard and graphic associated with Dig Dug.">
         <h3>
         Quote
         </h3>
+        <!--
         <blockquote>
 	        This definitely goes under the heading of <b>"Games That Were Made While a Programmer Was on Drugs,"</b> or at least had a good imagination. And maybe they were into horror movies too.<br>
 		        -- https://www.mobygames.com/mobyrank/source/sourceId,540/
         </blockquote>
-
-        <h3>
+        -->
+        <p class="quote">
+            This definitely goes under the heading of <b>"Games That Were Made While a Programmer Was on Drugs,"</b> or at least had a good imagination. And maybe they were into horror movies too.<br>
+		        -- https://www.mobygames.com/mobyrank/source/sourceId,540/
+        </p>
+        <h3 id="source">
         Source
         </h3>
 
         <footer>
-        <a href="https://www.mobygames.com/game/arcade/dig-dug">https://www.mobygames.com/game/arcade/dig-dug</a>
+        <a href="https://www.mobygames.com/game/arcade/dig-dug" target="_blank">https://www.mobygames.com/game/arcade/dig-dug</a>
         <p>
             Extra image sourced from <a href="https://www.gamesmeter.nl/game/9808">here</a>.
         </p>
