@@ -1,4 +1,41 @@
 @charset "UTF-8";
+:root
+{
+/* CSS HEX */
+--azure-web: #ecfffdff;
+--prussian-blue: #222b3dff;
+--vermilion: #ff3e3eff;
+--vermilion-highlight: #FF5C5C;
+
+/* CSS HSL */
+--azure-web: hsla(174, 100%, 96%, 1);
+--prussian-blue: hsla(220, 28%, 19%, 1);
+--vermilion: hsla(0, 100%, 62%, 1);
+
+/*The above code was generated using coolors.io css output*/
+}
+h1,h2,h3,h4
+{
+    border-bottom: 0.5vw dotted var(--vermilion);
+}
+
+
+a:link
+{
+    color: orange;
+}
+a:visited
+{
+    color: var(--vermilion);
+}
+a:focus, a:hover
+{
+    color: var(--vermilion-highlight);
+}
+a:active
+{
+    color: var(--azure-web);
+}
 
 h1 { 
     color:red;
@@ -11,7 +48,8 @@ p.quote {
     margin-left: 100px;
 }
 body {
-    background: rgb(32, 146, 184);
+    background-color: var(--prussian-blue);
+    background-image: url(../images/taizo_hori.png);
     font-family: "Inter", 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 h2
@@ -19,14 +57,36 @@ h2
     color: pink;
     font-family: sans-serif;
 }
+img
+{
+    border: 0.25vw solid var(--vermilion-highlight);
+    margin:1rem;
+}
 img.side
 {
     float:right;
     margin: 0 12px;
 }
-footer > p, a
+footer
+{
+    background-color: var(--prussian-blue);
+}
+footer > p
 {
     color: orange;
+}
+
+main, header, footer
+{
+    border: 1px solid black;
+    margin: 0 auto;
+    width: 80vw;
+    background-color: var(--azure-web);
+    
+}
+main
+{
+    padding: 1vw;
 }
 /*
 *
