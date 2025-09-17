@@ -1,0 +1,122 @@
+@font-face {
+    font-family: "Sansation";
+    src: url("./Sansation/Sansation-Light.ttf");
+}
+@font-face {
+    font-family: "Kode Mono";
+    src: url("./Kode_Mono/static/KodeMono-SemiBold.ttf");
+}
+:root
+{
+    --c1: rgb(234, 136, 136);
+    --c2: rgb(52, 64, 110);
+
+    --l1: rgb(205, 72, 72);
+    --l2: rgb(232, 154, 65);
+    --l3: rgb(228, 121, 0);
+    --l4: rgb(124, 42, 180);
+}
+body
+{
+    width: 60%;
+    margin: 100px auto;
+    background-color: var(--c2);
+    background-image: url("./smileys.png");
+    background-repeat:repeat;
+    
+}
+body h1,h2,h3,h4,p
+{
+    color: var(--c1);
+}
+body a:link
+{
+    color: var(--l1);
+}
+body a:visited
+{
+    color: var(--l2);
+}
+body a:focus, a:hover
+{
+    color: var(--l3);
+}
+body a:active
+{
+    color: var(--l4);
+}
+div#headshot
+{
+    text-align: center;
+    margin:0 0;
+    padding: 0 0 2vw 0;
+}
+div#headshot > img
+{
+    width: 30%;
+    float:right;
+}
+
+div#projlist
+{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around
+}
+
+div#projlist > div.proj
+{
+    flex: 0 1 500px;
+    text-align: center;
+    
+}
+h1,h2,h3,h4
+{
+    text-align: center;
+    font-family: Sansation;
+    clear: both;
+}
+
+h1
+{
+    font-size: 5vw;
+    border-bottom: 0.5vw solid var(--l2);
+}
+p, a
+{
+    font-size: 1.0vw;
+    font-family: "Kode Mono";
+}
+h3
+{
+    font-size: 2vw;
+    padding-top: 2vw;
+}
+h4#githubrepo > a
+{
+    font-size: 4vw;
+}
+
+@media only screen and (max-width: 900px)
+{
+    p, a
+    {
+        font-size: 20px;
+        clear:both;
+    }
+    div#headshot > img
+    {
+        width: 70%;
+        float: none;
+    }
+
+    h3
+    {
+        font-size: 40px;
+    }
+    h4#githubrepo > a
+    {
+        font-size: 60px;
+    }
+    
+}
