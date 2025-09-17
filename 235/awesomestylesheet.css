@@ -29,9 +29,10 @@ body h1,h2,h3,h4,p
 {
     color: var(--c1);
 }
+/*ALL ANCHOR TYPES HANDLED HERE*/
 body a:link
 {
-    color: var(--l1);
+    color: var(--c1);
 }
 body a:visited
 {
@@ -45,6 +46,7 @@ body a:active
 {
     color: var(--l4);
 }
+/*ID SELECTORS*/
 div#headshot
 {
     text-align: center;
@@ -64,6 +66,7 @@ div#projlist
     justify-content: space-around
 }
 
+/*CLASS SELECTOR*/
 div#projlist > div.proj
 {
     flex: 0 1 500px;
@@ -92,7 +95,9 @@ h3
     font-size: 2vw;
     padding-top: 2vw;
 }
-h4#githubrepo > a
+
+/*ANOTHER CLASS SELECTOR NO WAY*/
+h4.githubrepo > a
 {
     font-size: 4vw;
 }
