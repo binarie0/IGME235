@@ -1,0 +1,48 @@
+/* Do everything in this file */
+
+/*thin red line under all subheadings*/
+h2, h3, h4, h5, h6
+{
+    border-bottom: 0.25vw solid red;
+}
+
+/*float all images of tetrominos to the right*/
+figure > img, figcaption
+{
+    float: right;
+    height: 5vw;
+    width: auto;
+    margin-left: 5%;
+}
+figure
+{
+    height: 5vw;
+}
+
+div.tet
+{
+    clear: right;
+    border: 1px solid red;
+}
+div.tet > img
+{
+    margin-left: 5%;
+}
+footer
+{
+    clear: right;
+    /*
+    position: relative;
+    transform: translateY(-500px);
+    */
+    /*
+    position:absolute;
+    top:0;
+    */
+    /*
+    position:fixed;
+    top:0;
+    right:0;
+    z-index: -3;
+    */
+}
