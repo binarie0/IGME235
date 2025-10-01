@@ -1,1 +1,40 @@
 @charset "UTF-8";
+
+body
+{
+    display: grid;
+    
+    grid-template-areas: 
+        "title title"
+        "photos focus"
+        "bottom topSecret";
+        
+    
+    grid-template-columns: 33% 67%;
+    grid-template-rows: 20vh 60vh 20vh;
+    
+}
+
+h1
+{
+    grid-area: "title";
+
+}
+div.text
+{
+    grid-area: "focus";
+    
+}
+div.imgCollage
+{
+    grid-area: "photos";
+}
+div.bottom
+{
+    grid-area: bottom;
+}
+#topSecret
+{
+    grid-area: topSecret;
+}
+
