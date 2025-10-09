@@ -24,7 +24,7 @@ body
         
     
     grid-template-columns: 45% 55%;
-    grid-template-rows: 20vh 55vh 25vh;
+    grid-template-rows: 20vh 85vh 25vh;
     width: 1200px;
     margin: 0 auto;
     background-color: rgb(#ffffaa);
@@ -59,12 +59,12 @@ div#titlecard > h1
     background-clip:border-box;
     align-items: center;
     text-align: center;
-    padding: 30px;
+    padding: 20px;
     
     margin:0;
     font-family: RetroTeam, 'Times New Roman', serif;
     font-kerning: none;
-    font-size: 3em;
+    font-size: 2em;
     letter-spacing: 5px;
 }
 div.text
@@ -77,19 +77,19 @@ div.text
 div.text > h2
 {
     font-family: RetroTeam, 'Times New Roman', serif;
-    font-size: 4.5em;
+    font-size: 3.5em;
     order: 0;
     margin-top:0;
     margin-bottom:0;
-    width: 80%;
+    width: 60%;
 }
 div.text > h5.date
 {
     order: -1;
     font-family: Stencil, serif;
-    font-size: 2.5em;
+    font-size: 2em;
     margin:0;
-    padding-top:5vw;
+    padding-top:6vh;
     letter-spacing: 5px;
     
 }
@@ -101,7 +101,7 @@ div.text > p.subtitle
 div.text > main
 {
     order: 2;
-    font-size: 1.3em;
+    font-size: 1.4em;
 }
 
 div.imgCollage
@@ -125,7 +125,7 @@ div.imgCollage img#img2
     filter: drop-shadow(0px 0px 10px);
     width: 60%;
     position: relative;
-    transform: rotate(-8deg) translate(150px, -70px);
+    transform: rotate(-8deg) translate(150px, 10px);
     
 }
 div.imgCollage > div.asides
@@ -155,7 +155,7 @@ div.bottom div.stickyNote
     background-repeat: no-repeat;
     background-position: -100px 0px;
     width: 80%;
-    height: 25vh;
+    height: 370px;
     margin:0;
     padding:0;
     margin-left: 15%;
