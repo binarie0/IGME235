@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>DOM-3</title>
+	<style>
+		body{border:1px solid gray;}
+		p b{transform: rotate(20deg)}
+	</style>
+</head>
+<body>
+<h1>My Page</h1>
+<h2>Info</h2>
+<h2>Pictures</h2>
+<h2>More Info</h2>
+<p>Blah <b>Blah</b> Blah</p>
+<p>Blah <b>Blah</b> Blah</p>
+<p id="lastParagraph">Blah <b>Blah</b> Blah</p>
+<footer>Copyright &copy; <b>20XX</b></footer>
+<script>
+	"use strict"; 
+  
+  // add your own code here.
+  document.querySelector("h1").innerHTML = "My UFO Page";
+  let allH2s = document.querySelectorAll("h2");
+  allH2s[0].innerHTML = "My UFO Info";
+  allH2s[1].innerHTML = "My UFO Pictures";
+  allH2s[2].innerHTML = "";
+
+  let body = document.querySelector("body");
+  body.style.fontFamily = "sans-serif";
+  body.style.color = "#ff4d20";
+
+  let firstParagraph = document.querySelector("p");
+  firstParagraph.innerHTML = "Report your UFO sightings here: <a href='https://nuforc.org' target='_blank'>nuforc.org</a>";
+  firstParagraph.style.color = "green";
+  firstParagraph.style.fontWeight = "bold";
+  firstParagraph.style.fontSize = "2em";
+  firstParagraph.style.textTransform = "uppercase";
+  firstParagraph.style.textShadow = "3px 2px #A44";
+
+  let allPs = document.querySelectorAll("p");
+  //we already used the first paragraph, so I'll start at 1
+  allPs[1].innerHTML = "";
+  allPs[2].innerHTML = "<img src='https://i1.wp.com/nypost.com/wp-content/uploads/sites/2/2017/10/171026-ufo-sighting-spots-feature.jpg' alt='A picture of a grainy UFO'>";
+  	
+  let footer =  document.querySelector("footer");
+  footer.innerHTML = new Date().getFullYear().toString() + " Zach A";
+	</script>
+</body>
+</html>
