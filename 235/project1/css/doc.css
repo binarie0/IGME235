@@ -9,7 +9,10 @@
     font-family: "Stencil";
     src: url(../media/StardosStencil-Regular.ttf);
 }
-
+@font-face {
+    font-family: "Handwriting";
+    src: url(../media/Handwriting.ttf);
+}
 body
 {
     display: grid;
@@ -21,9 +24,10 @@ body
         
     
     grid-template-columns: 45% 55%;
-    grid-template-rows: 20vh 60vh 20vh;
+    grid-template-rows: 20vh 55vh 25vh;
     width: 1200px;
     margin: 0 auto;
+    background-color: rgb(#ffffaa);
 }
 
 @media screen and (max-width: 1200px) {
@@ -73,41 +77,116 @@ div.text
 div.text > h2
 {
     font-family: RetroTeam, 'Times New Roman', serif;
-    font-size: 5em;
+    font-size: 4.5em;
     order: 0;
     margin-top:0;
     margin-bottom:0;
-    width: 90%;
+    width: 80%;
 }
 div.text > h5.date
 {
     order: -1;
     font-family: Stencil, serif;
-    font-size: 3em;
+    font-size: 2.5em;
     margin:0;
     padding-top:5vw;
+    letter-spacing: 5px;
     
 }
 div.text > p.subtitle
 {
     order: 1;
-    font-size: 1.5em;
+    font-size: 1.4em;
 }
 div.text > main
 {
     order: 2;
+    font-size: 1.3em;
 }
 
 div.imgCollage
 {
     grid-area: "photos";
+    
+}
+
+
+
+div.imgCollage img#img1
+{
+    border: 0.5vh solid black;
+    width: 70%;
+    margin: 0 0 0 25%;
+}
+
+div.imgCollage img#img2
+{
+    border: 5px solid white;
+    filter: drop-shadow(0px 0px 10px);
+    width: 60%;
+    position: relative;
+    transform: rotate(-8deg) translate(150px, -70px);
+    
+}
+div.imgCollage > div.asides
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 20vh;
+    width: 70%;
+    margin: 0 0 0 25%;
+    font-size: 0.9em;
+}
+div.imgCollage > div.asides > aside
+{
+    height: 100%;
+    
 }
 div.bottom
 {
     grid-area: bottom;
 }
+
+div.bottom div.stickyNote
+{
+    background-image: url(../media/stickynote.png);
+    background-clip:border-box;
+    background-repeat: no-repeat;
+    background-position: -100px 0px;
+    width: 80%;
+    height: 25vh;
+    margin:0;
+    padding:0;
+    margin-left: 15%;
+    
+    
+}
+div.stickyNote > *
+{
+    font-family: Handwriting, sans-serif;
+}
+div.stickyNote > h3
+{
+    width: 100%;
+    text-align: center;
+    font-size: 2em;
+    padding:0;
+    padding-top: 2vh;
+    margin:0;
+}
+div.stickyNote > p
+{
+    font-size: 1.5em;
+    width: 90%;
+    padding: 10px 5% 0 5%;
+    margin:0;
+}
 #topSecret
 {
     grid-area: topSecret;
+    width: 55%;
+    margin: 0 0 0 45%;
+    padding:0;
 }
 
