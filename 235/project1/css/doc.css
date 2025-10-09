@@ -1,5 +1,15 @@
 @charset "UTF-8";
 
+@font-face {
+    font-family: "RetroTeam";
+    
+    src: url(../media/RetroTeam.otf);
+}
+@font-face {
+    font-family: "Stencil";
+    src: url(../media/StardosStencil-Regular.ttf);
+}
+
 body
 {
     display: grid;
@@ -10,21 +20,84 @@ body
         "bottom topSecret";
         
     
-    grid-template-columns: 33% 67%;
+    grid-template-columns: 45% 55%;
     grid-template-rows: 20vh 60vh 20vh;
-    
+    width: 1200px;
+    margin: 0 auto;
 }
 
-h1
+@media screen and (max-width: 1200px) {
+    body
+    {
+        width: 100%;
+        margin: 0 0;
+    }
+}
+
+@media screen and (max-width: 480px)
+{
+    body
+    {
+        grid-template-columns: 160px 320px;
+        overflow: scroll;
+    }
+}
+
+div#titlecard
 {
     grid-area: "title";
-
+    padding-top: 2vh;
+}
+div#titlecard > h1
+{
+    background-image: url(../media/title_back.png);
+    
+    background-clip:border-box;
+    align-items: center;
+    text-align: center;
+    padding: 30px;
+    
+    margin:0;
+    font-family: RetroTeam, 'Times New Roman', serif;
+    font-kerning: none;
+    font-size: 3em;
+    letter-spacing: 5px;
 }
 div.text
 {
     grid-area: "focus";
+    display: flex;
+    flex-direction: column;
+    padding-top: 2vh;
+}
+div.text > h2
+{
+    font-family: RetroTeam, 'Times New Roman', serif;
+    font-size: 5em;
+    order: 0;
+    margin-top:0;
+    margin-bottom:0;
+    width: 90%;
+}
+div.text > h5.date
+{
+    order: -1;
+    font-family: Stencil, serif;
+    font-size: 3em;
+    margin:0;
+    padding-top:5vw;
     
 }
+div.text > p.subtitle
+{
+    order: 1;
+    font-size: 1.5em;
+}
+div.text > main
+{
+    order: 2;
+}
+
 div.imgCollage
 {
     grid-area: "photos";
