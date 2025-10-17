@@ -28,6 +28,7 @@ body
     width: 1200px;
     margin: 0 auto;
     background-color: rgb(#ffffaa);
+    background-image: url("../media/paper.jpg");
 }
 
 div#titlecard
@@ -171,7 +172,7 @@ div.stickyNote > p
     grid-area: topSecret;
     width: 45%;
     margin: 0 0 0 55%;
-    padding-top:5vh;
+    padding-top:8vh;
 }
 
 
@@ -235,6 +236,7 @@ div.stickyNote > p
        margin:0;
        margin-left: 10%;
        margin-bottom: 50px;
+       margin-top: 9vh;
        transform: translate(0, 0); 
     }
     div.imgCollage img#img1
