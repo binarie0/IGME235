@@ -167,6 +167,19 @@ div.stickyNote > p
     padding-bottom:0;
     
 }
+
+div.stickyNote > p > a:link, a:visited
+{
+    color: black;
+}
+div.stickyNote > p > a:focus, a:hover
+{
+    color: white;
+}
+div.stickyNote > p > a:active
+{
+    color: red;
+}
 #topSecret
 {
     grid-area: topSecret;
