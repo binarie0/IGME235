@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Web Apps-4-HW</title>
+	<style>
+		body{border:1px solid gray;}
+	</style>
+</head>
+<body>
+<h1>My Favorites</h1>
+<h2>My Favorite Colors</h2>
+
+<ol id="colorsList">
+	
+</ol>
+
+<h2>My Favorite Foods</h2>
+
+<ol id="foodsList">
+	
+</ol>
+
+<h2>My Favorite Links</h2>
+
+<ol id="linksList">
+	
+</ol>
+
+<script>
+"use strict";
+
+let colors = ["red","green","blue","purple","pink"];
+let foods = ["pizza", "pasta", "sushi", "tikka masala", "spicy chicken"]; // add some foods
+
+// Optional - can you figure out how to pull both the key AND the value
+// from the `links` object literal?
+let links = {
+		"RIT": "http://www.rit.edu",
+		"RWAG" : "https://www.facebook.com/RWAGclub",
+		"New Media Club" : "http://newmediaclub.cias.rit.edu"
+}
+
+//for loop (std)
+let colorsList = document.getElementById("colorsList");
+for (let index = 0; index < colors.length; index++) {
+    const color = colors[index];
+    let element = document.createElement("li");
+    element.innerHTML = color;
+    colorsList.appendChild(element);
+    
+}
+
+
+
+//for-of loop
+let foodsList = document.getElementById("foodsList");
+for (const text of foods) {
+    let element = document.createElement("li");
+    element.innerHTML = text;
+    foodsList.appendChild(element);
+}
+
+//for-in loop
+let linksList = document.getElementById("linksList");
+for (const key in links) {
+    const link = links[key];
+    
+    let element = document.createElement("li");
+    //searched this one up, felt a little easier than doing ... + ... + ... + ...
+    element.innerHTML = String.prototype.concat("<a href=", link, ">", key, "</a>");
+    linksList.appendChild(element);
+    
+}
+
+</script>
+</body>
+</html>
