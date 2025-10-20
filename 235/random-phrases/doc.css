@@ -1,0 +1,75 @@
+@font-face {
+    font-family: "Stepalange";
+    src: url(./Stepalange.otf);
+}
+
+body{
+    width: 80%;
+    margin: 0 auto;
+    background-color: #00002d;
+}
+*
+{
+    color: salmon;
+    font-family: Stepalange;
+}
+
+h1, h3{
+    text-align: center;
+}
+h1
+{
+    font-size: 4em;
+    letter-spacing: 0.3em;
+    margin:0;
+    padding-top: 2em;
+}
+h3
+{
+    margin:0;
+    font-size: 2em;
+}
+
+li
+{
+    font-size: 3em;
+    color: black;
+}
+ul
+{
+    background-image: url(./bggif.gif);
+    background-clip:border-box;
+    height: 50%;
+    padding-left: 10%;
+    background-size: 100%;
+}
+button
+{
+    justify-content: center;
+    text-align: center;
+    width: 50%;
+    margin-left: 25%;
+    height: 2em;
+    background-color: white;
+    transition: background-color 0.3s;
+    border: 1px solid black;
+    font-size: 3em;
+}
+button:hover
+{
+    background-color: black;
+}
+button:active
+{
+    color: green;
+}
+
+@media screen and (max-width: 700px) {
+    body
+    {
+        width:100%;
+        margin:0;
+        padding:0;
+    }
+
+}

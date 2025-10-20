@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./doc.css">
+    <title>Random Thing Generator</title>
+</head>
+<body>
+    <h1>Random Thing Generator</h1>
+    <h3>Zach Ayers</h3>
+    <ul id="ideas">
+
+    </ul>
+
+    <button id="submit">New things!</button>
+</body>
+
+
+<script>
+    "use strict";
+
+
+    let phrases = ["water", "pizza", "video games", "soccer", "plants", "lime", "eyes", "computer", "asterisk", "bracelet", "sketch pad", "toy plant", "chili", "giraffe", "college", "tea", "sunglasses", "popcorn", "nail file", "hairbrush", "paintbrush", "ladle", "glitter", "frying pan",
+    "laser pointer", "clock", "soda",
+    "glue", "squirrel", "card", "canvas", "carrots", "jam", "cork",
+    "music", "spring", "pinecone", "wireless remote", "cars", "apple", "orange", "sponge"
+    ]
+    let ideas = document.querySelector("#ideas");
+    let submit = document.querySelector("#submit");    
+    
+    
+    let displayThings = (e) => 
+    {
+        ideas.innerHTML = "";
+        let usedPhrases = [];
+        for (let i = 0; i < 10; i++)
+        {
+            let randomPhrase = "";
+            do
+            {
+                randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+            } while (usedPhrases.includes(randomPhrase));
+            usedPhrases.push(randomPhrase);
+            let li = "<li>" + randomPhrase + "</li>\n";
+            ideas.innerHTML += li;
+        }
+    }
+
+    window.onload = displayThings;
+    submit.onclick = displayThings;
+
+</script>
+</html>
