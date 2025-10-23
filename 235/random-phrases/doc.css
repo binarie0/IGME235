@@ -11,7 +11,7 @@ body{
 *
 {
     color: salmon;
-    font-family: Stepalange;
+    font-family: Stepalange, monospace;
 }
 
 h1, h3{
@@ -22,12 +22,13 @@ h1
     font-size: 4em;
     letter-spacing: 0.3em;
     margin:0;
-    padding-top: 2em;
+    padding-top: 4vw;
 }
 h3
 {
     margin:0;
     font-size: 2em;
+    margin-bottom:2vw;
 }
 
 li
@@ -35,13 +36,22 @@ li
     font-size: 3em;
     color: black;
 }
+div.container
+{
+    width:50%;
+    margin-left:25%;
+}
 ul
 {
+    list-style: none;
     background-image: url(./bggif.gif);
-    background-clip:border-box;
+    background-clip:padding-box;
     height: 50%;
-    padding-left: 10%;
-    background-size: 100%;
+    width: 100%;
+    margin:0;
+    padding:0;
+    background-size:cover;
+    margin-bottom: 2vw;
 }
 button
 {
@@ -52,7 +62,7 @@ button
     height: 2em;
     background-color: white;
     transition: background-color 0.3s;
-    border: 1px solid black;
+    border: 1px solid rgb(255, 255, 255);
     font-size: 3em;
 }
 button:hover
