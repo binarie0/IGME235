@@ -82,7 +82,7 @@
         let results = obj.data;
         console.log("results.length = " + results.length);
         let bigString = "<p><i>Here are " + results.length + " results for '" + displayTerm + "'</i></p>";
-
+        bigString += "<div id='gifs'>";
         //#10 - loop through array and append
         for (let i = 0; i < results.length; i++)
         {
@@ -98,12 +98,13 @@
             //#13 - build a <div> to hold result
             let line = `<div class='result'><img src='${smallURL}' title='${result.id}' />`;
             //line += `<span>Rating: ${result.images.rating}</span>`
-            line += `<span><a target='_blank' href='${url}'>View on GIPHY</a></span></div>`;
+            line += `<span><a target='_blank' href='${url}'>View on GIPHY</a></span><p>Rating: ${result.rating.toUpperCase()}</p></div>`;
             
             //#15 (skipped 14 because no need to write all that) - append to big string
             bigString += line;
         }
-
+        
+        bigString += "</div>";
         //#16 - set the inner html so that user can see content
         document.querySelector("#content").innerHTML = bigString;
 

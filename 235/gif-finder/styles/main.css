@@ -19,23 +19,29 @@
  			font-style: italic;
  			height:32px;
  		}
- 		
+ 		#gifs
+		{
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+		}
  		.result {
+			
 			position: relative;
-			height: 175px;
-			width: 100px;
+			height: 150px;
+			width: 1fr;
 			float:left;
 			border:1px solid gray;
 			padding:5px;
 			margin-left:10px;
 			margin-bottom:10px;
+			
 		}
 
 		.result img {
-			position: absolute;
-			left: 5px;
-			bottom: 5px;
+			position: relative;
+			float:right;
 			display:block;
+			height: 80%;
 			
 		}
 		
