@@ -3,19 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Weather Cat!</title>
     <script src="./js/main.js"></script>
 </head>
 <body>
-    <h1>Weather at</h1>
-    <form id="form">
-        <label for="latitude">Please enter a latitude (-90 to 90)</label>
-        <input type="number" name="lat" id="latitude" placeholder="0.0" min="-90" max="90">
-        <label for="longitude">Please enter a longitude (-180 to 180)</label>
-        <input type="number" name="long" id="longitude" placeholder="0.0" min="-180" max="180">
-
-        <input type="submit" id="submit">
-    </form>
-    <p id="dataDump"></p>
+    <h1 id="city"></h1>
+    <p id="weather"></p>
 </body>
 </html>
