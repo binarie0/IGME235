@@ -6,7 +6,8 @@ let time;
 const WEATHER_API = "https://api.open-meteo.com/v1/forecast?";
 
 //this is a free api with a 5000 req daily limit, please don't abuse :3
-const CITY_API = "https://us1.locationiq.com/v1/reverse?key=pk.4d633925a4e10dc4002441f5450cb86d&format=json&"
+const CITY_REVERSE_API = "https://us1.locationiq.com/v1/reverse?key=pk.4d633925a4e10dc4002441f5450cb86d&format=json&";
+const CITY_SEARCH_API = "https://us1.locationiq.com/v1/search?key=pk.4d633925a4e10dc4002441f5450cb86d&format=json&";
 
 window.addEventListener("load", __init__);
 
@@ -35,8 +36,45 @@ function __init__(e)
         temperature.innerHTML = "Geolocation is not supported by this browser.";
     }
 
-    
+    document.getElementById("newcity").addEventListener("click", newCityRequested);
 }
+
+function newCityRequested(e)
+{
+    //e.preventDefaults();
+    console.log("submission works!");
+    let requestedCity = document.getElementById("cityname").value;
+    if (requestedCity.length <= 1 || !/^[A-Za-z]+/.test(requestedCity)) return;
+
+    console.log("hello");
+    let dataURL = CITY_SEARCH_API + "city=" + requestedCity;
+
+    let xhr = new XMLHttpRequest();
+    xhr.onload = cityRequestLoaded;
+    xhr.onerror = cityRequestError;
+    xhr.open("GET", dataURL);
+    xhr.send();
+}
+
+function cityRequestLoaded(e)
+{
+    //console.log("success");
+    let xhr = e.target;
+    let json = JSON.parse(xhr.responseText);
+
+    city.innerHTML = document.getElementById("cityname").value;
+
+    console.log(json);
+    loadWeather(json[0].lat, json[0].lon);
+}
+
+function cityRequestError(e)
+{
+    console.log("PROBLEM!");
+}
+
+
+
 
 function initializeClock()
 {
@@ -80,7 +118,7 @@ function __successfulLocation(position)
 function loadCity(latitude, longitude)
 {
     let coords = `lat=${latitude}&lon=${longitude}`;
-    let dataURL = CITY_API + coords;
+    let dataURL = CITY_REVERSE_API + coords;
 
     let xhr = new XMLHttpRequest();
     xhr.onload = cityLoaded;
