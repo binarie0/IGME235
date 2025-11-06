@@ -1,6 +1,8 @@
-//this is for the form
-let weatherData;
+
+let temperature;
 let city;
+let weather_type;
+let time;
 const WEATHER_API = "https://api.open-meteo.com/v1/forecast?";
 
 //this is a free api with a 5000 req daily limit, please don't abuse :3
@@ -8,22 +10,52 @@ const CITY_API = "https://us1.locationiq.com/v1/reverse?key=pk.4d633925a4e10dc40
 
 window.addEventListener("load", __init__);
 
+//this is to ensure successful grab of data before animating the cat
+let successfulQueries = false;
+
+let temp;
+let weather_code;
+
 
 /////////////////////////////////////////////////////////////////////////////////
 ///                                 INITIALIZATION
 /////////////////////////////////////////////////////////////////////////////////
 function __init__(e)
 {
-    weatherData = document.getElementById("weather");
+    initializeClock();
+    temperature = document.getElementById("temp");
     city = document.getElementById("city");
-
+    weather_type = document.getElementById("weather");
+    time = document.getElementById("time");
     //request user location
     
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(__successfulLocation, __errorLocation);
     } else {
-        weatherData.innerHTML = "Geolocation is not supported by this browser.";
+        temperature.innerHTML = "Geolocation is not supported by this browser.";
     }
+
+    
+}
+
+function initializeClock()
+{
+    setInterval(updateClock, 1000);    
+}
+
+function updateClock()
+{
+    //console.log("hi");
+    let t = new Date();
+    let pm = t.getHours() > 12;
+    let adjustedHours = pm ? t.getHours() - 12 : t.getHours();
+
+    //gets the last two numbers
+    let hourStr = ('0' + adjustedHours.toString()).slice(-2);
+
+    let minute = ('0' + t.getMinutes().toString()).slice(-2);
+
+    time.innerHTML = `${hourStr}:${minute}`;
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -31,9 +63,15 @@ function __init__(e)
 /////////////////////////////////////////////////////////////////////////////////
 function __successfulLocation(position)
 {
+    successfulQueries = true;
     //console.log(position);
     loadWeather(position.coords.latitude, position.coords.longitude);
     loadCity(position.coords.latitude, position.coords.longitude);
+
+    if (successfulQueries)
+    {
+        animateCat(temp, weather_code);
+    }
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -63,7 +101,15 @@ function cityLoaded(e)
 
     city.innerHTML = cityData.address.city;
 
+    successfulQueries &= true;
+}
 
+/////////////////////////////////////////////////////////////////////////////////
+///                                 GETTING THE CAT ANIMATED
+/////////////////////////////////////////////////////////////////////////////////
+function animateCat(temp, weather_code)
+{
+    let weather_category = getWeatherCategory(weather_code);
 }
 
 
@@ -72,8 +118,9 @@ function cityLoaded(e)
 /////////////////////////////////////////////////////////////////////////////////
 function cityError(e)
 {
+    successfulQueries = false;
     city.innerHTML = "Error!";
-    weatherData.innerHTML = "";
+    temperature.innerHTML = "";
 }
 
 
@@ -124,12 +171,14 @@ function dataLoaded(e)
     let wData = JSON.parse(xhr.responseText);
     //console.log(wData);
     
-    let temp = Math.round(toFahrenheit(wData.current.temperature_2m));
-    let weatherDescription = getWeatherDescription(wData.current.weather_code);
-    let dataString = `Temperature: ${temp}°F\n${weatherDescription}`;
+    temp = Math.round(toFahrenheit(wData.current.temperature_2m));
+    weather_code = wData.current.weather_code;
+    let weatherDescription = getWeatherDescription(weather_code);
 
-    weatherData.innerText = dataString;
+    temperature.innerText = `${temp}°F`;
+    weather_type.innerHTML = weatherDescription;
     
+    successfulQueries &= true;
 }
 
 
@@ -154,6 +203,35 @@ Code	        Description
 95 *	        Thunderstorm: Slight or moderate
 96, 99 *	    Thunderstorm with slight and heavy hail
 */
+
+//equivalently an enum
+const WEATHER_CONDITIONS = Object.freeze(
+    {
+        CLEAR: 0,
+        CLOUDS: 1,
+        FOG: 2,
+        DRIZZLE: 3,
+        RAIN: 4,
+        SNOW: 5,
+        STORM: 6,
+        THUNDER: 7
+    }
+)
+function getWeatherCategory(weather_code)
+{
+    switch(weather_code)
+    {
+        case 0: return WEATHER_CONDITIONS.CLEAR;
+        case 1: case 2: case 3: return WEATHER_CONDITIONS.CLOUDS;
+        case 45: case 48: return WEATHER_CONDITIONS.FOG;
+        case 51: case 53: case 55: case 57: return WEATHER_CONDITIONS.DRIZZLE;
+        case 61: case 63: case 65: case 66: case 67: return WEATHER_CONDITIONS.RAIN;
+        case 71: case 73: case 75: case 77: return WEATHER_CONDITIONS.SNOW;
+        case 80: case 81: case 82: case 85: case 86: return WEATHER_CONDITIONS.STORM;
+        case 95: case 96: case 99: return WEATHER_CONDITIONS.STORM;
+        default: return WEATHER_CONDITIONS.CLEAR;
+    }
+}
 function getWeatherDescription(weather_code)
 {
     switch (weather_code)
@@ -181,9 +259,9 @@ function getWeatherDescription(weather_code)
         case 66:
         case 67: return "Freezing Rain";
 
-        case 71: return "Light Snowfall";
-        case 73: return "Snowfall";
-        case 75: return "Heavy Snowfall";
+        case 71: return "Light Snow";
+        case 73: return "Snow";
+        case 75: return "Heavy Snow";
 
         case 77: return "Snow Grains";
 
@@ -214,5 +292,6 @@ function toCelsius(f) {return (f - 32) / 1.8;}
 /////////////////////////////////////////////////////////////////////////////////
 function dataError(e)
 {
-    weatherData.innerHTML = "Error retrieving data!";
+    successfulQueries = false;
+    temperature.innerHTML = "Error retrieving data!";
 }
