@@ -27,15 +27,40 @@ body
     grid-template-rows: 20vh 85vh 25vh;
     width: 1200px;
     margin: 0 auto;
-    background-color: rgb(#ffffaa);
+    background-color: #ffa;
     background-image: url("../media/paper.jpg");
 }
 
 div#titlecard
 {
-    grid-area: "title";
+    grid-area: title;
     padding-top: 2vh;
 }
+div#titlecard > div.links
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    background-color: rgba(0, 0, 0, 0.4);
+    background-clip:border-box;
+    font-size: 1.5em;
+    padding: 0.5em;
+    font-family: RetroTeam, 'Times New Roman', serif;
+}
+/*TODO: ADD THE A TAG STUFF FOR INSIDE LINKS*/
+div.links > a, a:link, a:visited
+{
+    color: white;
+}
+div.links > a:hover
+{
+    color: lightgray;
+}
+div.links > a:active
+{
+    color: red;
+}
+
 div#titlecard > h1
 {
     background-image: url(../media/title_back.png);
@@ -53,7 +78,7 @@ div#titlecard > h1
 }
 div.text
 {
-    grid-area: "focus";
+    grid-area: focus;
     display: flex;
     flex-direction: column;
     padding-top: 2vh;
@@ -90,7 +115,7 @@ div.text > main
 
 div.imgCollage
 {
-    grid-area: "photos";
+    grid-area: photos;
     
 }
 
@@ -186,7 +211,7 @@ div.stickyNote > p > a:active
     grid-area: topSecret;
     width: 45%;
     margin: 0 0 0 55%;
-    padding-top:8vh;
+    padding-top:25vh;
 }
 
 
@@ -223,7 +248,7 @@ div.stickyNote > p > a:active
     {
         padding:0;
         margin: 0 auto;
-        width: 50%;
+        width: 80%;
         height: 100%;
         background-clip: content-box;
     }
@@ -251,7 +276,7 @@ div.stickyNote > p > a:active
        margin:0;
        margin-left: 10%;
        margin-bottom: 50px;
-       margin-top: 9vh;
+       margin-top: 250px;
        transform: translate(0, 0); 
     }
     div.imgCollage img#img1

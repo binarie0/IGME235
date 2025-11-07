@@ -27,12 +27,12 @@ body
     grid-template-rows: 20vh 85vh 25vh;
     width: 1200px;
     margin: 0 auto;
-    background-color: rgb(#ffffaa);
+    background-color: #ffffaa;
 }
 
 div#titlecard
 {
-    grid-area: "title";
+    grid-area: title;
     padding-top: 2vh;
 }
 div#titlecard > h1
@@ -52,7 +52,7 @@ div#titlecard > h1
 }
 div.text
 {
-    grid-area: "focus";
+    grid-area: focus;
     display: flex;
     flex-direction: column;
     padding-top: 2vh;
@@ -89,7 +89,7 @@ div.text > main
 
 div.imgCollage
 {
-    grid-area: "photos";
+    grid-area: photos;
     
 }
 
