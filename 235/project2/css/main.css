@@ -1,0 +1,39 @@
+@font-face {
+    font-family: "Cabin";
+    src: url(../media/Cabin-SemiBoldItalic.ttf);
+}
+body
+{
+    width: 60%;
+    margin:0 auto;
+}
+body > h1,h2,h3,h4,h5,h6,p
+{
+    text-align: center;
+    font-family: "Cabin", serif;
+}
+h1
+{
+    font-size: 12vw;
+    margin:0;
+    padding:0;
+    text-decoration: underline;
+}
+h3
+{
+    font-size: 4vw;
+    margin:0;
+}
+h4
+{
+    font-size: 3vw;
+    margin:0;
+    padding:0;
+}
+#time
+{
+    position: absolute;
+    bottom: 5%;
+    left: 25%;
+    font-size: 2vw;
+}
