@@ -115,15 +115,16 @@ function updateClock()
 {
     //console.log("hi");
     let t = new Date();
-    let pm = t.getHours() > 12;
-    let adjustedHours = pm ? t.getHours() - 12 : t.getHours();
+    let hrs = t.getHours();
+    let pm = hrs > 12;
+    let adjustedHours = pm ? hrs - 12 : hrs;
 
     //gets the last two numbers
     let hourStr = ('0' + adjustedHours.toString()).slice(-2);
 
     let minute = ('0' + t.getMinutes().toString()).slice(-2);
 
-    time.innerHTML = `${hourStr}:${minute}`;
+    time.innerHTML = `${hourStr}:${minute}${pm?"PM":"AM"}`;
 }
 
 /////////////////////////////////////////////////////////////////////////////////

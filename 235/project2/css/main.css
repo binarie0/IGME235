@@ -12,6 +12,15 @@ body > h1,h2,h3,h4,h5,h6,p
     text-align: center;
     font-family: "Cabin", serif;
 }
+#weather
+{
+    padding-bottom: 10vw;
+}
+label, input
+{
+    font-family: "Cabin", serif;
+    font-size:2vw;
+}
 h1
 {
     font-size: 12vw;
@@ -34,27 +43,44 @@ h4
 {
     position: absolute;
     bottom: 5%;
-    left: 25%;
+    right: 25%;
     font-size: 2vw;
+}
+#search
+{
+    position: absolute;
+    bottom:8%;
+    left:25%;
+
 }
 #searchList
 {
     display: flex;
+    flex-basis: auto;
     flex-wrap:wrap;
-    flex-direction: column;
-    height: 15vw;
-    width: 50%;
+    flex-basis: 200px;
+    flex-grow:0;
+    flex-shrink:0;
+    flex-direction: column-reverse;
+    height: 20vw;
+    width: 30%;
+    position: absolute;
+    bottom: 20%;
+    left:25%;
 }
 .placeButton
 {
-    width: 40%;
+    
+    width: 50%;
     border: 2px solid black;
     margin:0;
     margin-bottom: 5px;
     margin-top:5px;
-    font-size: 0.75vw;
+    margin-right: 5px;
+    font-size: 1vw;
     background-color: rgb(170, 170, 170);
     font-family: "Cabin", serif;
+    padding: 2px;
 }
 .placeButton:hover
 {
