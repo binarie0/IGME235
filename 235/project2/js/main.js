@@ -3,6 +3,8 @@ let temperature;
 let city;
 let weather_type;
 let time;
+let citySearch;
+let citySearchList;
 const WEATHER_API = "https://api.open-meteo.com/v1/forecast?";
 
 //this is a free api with a 5000 req daily limit, please don't abuse :3
@@ -23,27 +25,38 @@ let weather_code;
 /////////////////////////////////////////////////////////////////////////////////
 function __init__(e)
 {
-    initializeClock();
+    
     temperature = document.getElementById("temp");
     city = document.getElementById("city");
     weather_type = document.getElementById("weather");
     time = document.getElementById("time");
-    //request user location
+    citySearch = document.getElementById("citySearch");
+    citySearchList = document.getElementById("searchList");
     
+    initializeClock();
+
+    citySearch.addEventListener("keydown", (e) =>
+    {
+        if (!e.repeat && e.key == "Enter")
+        {
+            newCityRequested();
+        }
+    });
+
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(__successfulLocation, __errorLocation);
     } else {
         temperature.innerHTML = "Geolocation is not supported by this browser.";
     }
 
-    document.getElementById("newcity").addEventListener("click", newCityRequested);
+    
 }
 
-function newCityRequested(e)
+function newCityRequested()
 {
     //e.preventDefaults();
     console.log("submission works!");
-    let requestedCity = document.getElementById("cityname").value;
+    let requestedCity = citySearch.value;
     if (requestedCity.length <= 1 || !/^[A-Za-z]+/.test(requestedCity)) return;
 
     console.log("hello");
@@ -61,11 +74,28 @@ function cityRequestLoaded(e)
     //console.log("success");
     let xhr = e.target;
     let json = JSON.parse(xhr.responseText);
+    
+    citySearchList.innerHTML = "";
+    for (const e of json)
+    {
+        console.log(e);
+        if (e.type != "hamlet") //ignoring really really tiny towns in searchs
+        {
 
-    city.innerHTML = document.getElementById("cityname").value;
+            let div = document.createElement("div");
+            div.classList.add("placeButton");
+            div.innerHTML = e.display_name.length > 75 ? e.display_name.substring(0, 72) + "..." : e.display_name;
+            div.dataset.lat = e.lat;
+            div.dataset.long = e.lon;
+            div.addEventListener("click", loadCityListRequest);
+            citySearchList.appendChild(div);
+        }
+    }
 
-    console.log(json);
-    loadWeather(json[0].lat, json[0].lon);
+    //city.innerHTML = citySearch.value;
+
+    //console.log(json);
+    //loadWeather(json[0].lat, json[0].lon);
 }
 
 function cityRequestError(e)
@@ -112,6 +142,15 @@ function __successfulLocation(position)
     }
 }
 
+function loadCityListRequest(e) 
+{
+    //console.log(e.target.dataset.lat);
+    //console.log(e.target.dataset.long);
+    citySearchList.innerHTML = "";
+    loadCity(e.target.dataset.lat, e.target.dataset.long);
+    loadWeather(e.target.dataset.lat, e.target.dataset.long);
+}
+
 /////////////////////////////////////////////////////////////////////////////////
 ///                                 LOAD CITY INFORMATION
 /////////////////////////////////////////////////////////////////////////////////
@@ -135,9 +174,11 @@ function cityLoaded(e)
     let xhr = e.target;
 
     let cityData = JSON.parse(xhr.responseText);
-    //console.log(cityData);
-
-    city.innerHTML = cityData.address.city;
+    console.log(cityData);
+    if (cityData.address.city != undefined)
+        city.innerHTML = cityData.address.city;
+    else if (cityData.address.village != undefined)
+        city.innerHTML = cityData.address.village;
 
     successfulQueries &= true;
 }

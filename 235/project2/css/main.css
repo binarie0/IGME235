@@ -37,3 +37,26 @@ h4
     left: 25%;
     font-size: 2vw;
 }
+#searchList
+{
+    display: flex;
+    flex-wrap:wrap;
+    flex-direction: column;
+    height: 15vw;
+    width: 50%;
+}
+.placeButton
+{
+    width: 40%;
+    border: 2px solid black;
+    margin:0;
+    margin-bottom: 5px;
+    margin-top:5px;
+    font-size: 0.75vw;
+    background-color: rgb(170, 170, 170);
+    font-family: "Cabin", serif;
+}
+.placeButton:hover
+{
+    background-color: rgb(51, 51, 51);
+}
