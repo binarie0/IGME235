@@ -4,17 +4,13 @@
 }
 body
 {
-    width: 60%;
+    width: 100%;
     margin:0 auto;
 }
 body > h1,h2,h3,h4,h5,h6,p
 {
     text-align: center;
     font-family: "Cabin", serif;
-}
-#weather
-{
-    padding-bottom: 10vw;
 }
 label, input
 {
@@ -39,6 +35,11 @@ h4
     margin:0;
     padding:0;
 }
+p
+{
+    margin:0;
+    padding:0;
+}
 #time
 {
     position: absolute;
@@ -49,8 +50,9 @@ h4
 #search
 {
     position: absolute;
-    bottom:8%;
+    bottom: 5%;
     left:25%;
+    font-size:2vw;
 
 }
 #searchList
@@ -65,7 +67,7 @@ h4
     height: 20vw;
     width: 30%;
     position: absolute;
-    bottom: 20%;
+    bottom: 15%;
     left:25%;
 }
 .placeButton

@@ -19,6 +19,9 @@ let successfulQueries = false;
 let temp;
 let weather_code;
 
+const LOCAL_STORAGEKEY = "WEATHER_APP_ZA_PREVIOUS_SEARCHES";
+let searchData = [];
+
 
 /////////////////////////////////////////////////////////////////////////////////
 ///                                 INITIALIZATION
@@ -43,13 +46,18 @@ function __init__(e)
         }
     });
 
+    searchData = localStorage.getItem(LOCAL_STORAGEKEY) == null ? [] : JSON.parse(localStorage.getItem(LOCAL_STORAGEKEY));
+    window.onbeforeunload = (e) =>
+    {
+        localStorage.setItem(LOCAL_STORAGEKEY, JSON.stringify(searchData));
+    }
+
+
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(__successfulLocation, __errorLocation);
     } else {
         temperature.innerHTML = "Geolocation is not supported by this browser.";
-    }
-
-    
+    }    
 }
 
 function newCityRequested()
@@ -124,7 +132,7 @@ function updateClock()
 
     let minute = ('0' + t.getMinutes().toString()).slice(-2);
 
-    time.innerHTML = `${hourStr}:${minute}${pm?"PM":"AM"}`;
+    time.innerHTML = `${hourStr}:${minute} ${pm?"PM":"AM"}`;
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -182,7 +190,16 @@ function cityLoaded(e)
         city.innerHTML = cityData.address.village;
 
     successfulQueries &= true;
+
+    let c = {
+        city: cityData.innerHTML,
+        lat:cityData.lat,
+        long:cityData.long
+    };
+    searchData.push(c);
 }
+
+
 
 /////////////////////////////////////////////////////////////////////////////////
 ///                                 GETTING THE CAT ANIMATED
