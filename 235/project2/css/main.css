@@ -15,23 +15,27 @@ body > h1,h2,h3,h4,h5,h6,p
 label, input
 {
     font-family: "Cabin", serif;
-    font-size:2vw;
+    font-size:36px;
+}
+input
+{
+    width: 230px;
 }
 h1
 {
-    font-size: 12vw;
+    font-size: 200px;
     margin:0;
     padding:0;
     text-decoration: underline;
 }
 h3
 {
-    font-size: 4vw;
+    font-size: 80px;
     margin:0;
 }
 h4
 {
-    font-size: 3vw;
+    font-size: 60px;
     margin:0;
     padding:0;
 }
@@ -44,15 +48,15 @@ p
 {
     position: absolute;
     bottom: 5%;
-    right: 25%;
-    font-size: 2vw;
+    right: 5%;
+    font-size: 36px;
 }
 #search
 {
     position: absolute;
     bottom: 5%;
-    left:25%;
-    font-size:2vw;
+    left:5%;
+    font-size:36px;
 
 }
 #searchList
@@ -60,7 +64,6 @@ p
     display: flex;
     flex-basis: auto;
     flex-wrap:wrap;
-    flex-basis: 200px;
     flex-grow:0;
     flex-shrink:0;
     flex-direction: column-reverse;
@@ -68,7 +71,7 @@ p
     width: 30%;
     position: absolute;
     bottom: 15%;
-    left:25%;
+    left:5%;
 }
 .placeButton
 {
@@ -88,3 +91,4 @@ p
 {
     background-color: rgb(51, 51, 51);
 }
+
