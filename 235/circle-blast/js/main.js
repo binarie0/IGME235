@@ -12,20 +12,18 @@ let assets;
 // game variables
 let startScene;
 let gameScene, ship, scoreLabel, lifeLabel, shootSound, hitSound, fireballSound;
-let gameOverScene;
+let gameOverScene, gameOverScoreLabel;
 
 let circles = [];
 let bullets = [];
 let aliens = [];
 let explosions = [];
 let explosionTextures;
+let miniExplosionTextures;
 let score = 0;
 let life = 100;
 let levelNum = 1;
 let paused = true;
-
-// Load all assets
-loadImages();
 
 async function loadImages() {
   // https://pixijs.com/8.x/guides/components/assets#loading-multiple-assets
@@ -88,6 +86,7 @@ fireballSound = new Howl({
 
   // #7 - Load sprite sheet
   explosionTextures = loadSpriteSheet();
+  miniExplosionTextures = loadSpriteSheet(3);
   // #8 - Start update loop
   app.ticker.add(gameLoop);
 
@@ -101,30 +100,30 @@ function createLabelsAndButtons()
 {
     let buttonStyle = {
         fill: 0xff0000,
-        fontSize: 48,
-        fontFamily: "Verdana"
+        fontSize: 24,
+        fontFamily: "Press Start 2P"
     }
 
     let startLabel = new PIXI.Text("Circle Blast!", {
         fill: 0xffffff,
-        fontSize: 96,
-        fontFamily: "Verdana",
+        fontSize: 36,
+        fontFamily: "Press Start 2P",
         stroke: 0xff0000,
         strokeThickness: 6
     });
-    startLabel.x = 50;
+    startLabel.x = sceneWidth/2 - startLabel.width/2;
     startLabel.y = 120;
     startScene.addChild(startLabel);
 
     let startLabel2 = new PIXI.Text("R U Worthy?", {
         fill: 0xffffff,
-        fontSize: 32,
-        fontFamily: "Verdana",
+        fontSize: 24,
+        fontFamily: "Press Start 2P",
         fontStyle: "italic",
         stroke: 0xff0000,
         strokeThickness: 6
     })
-    startLabel2.x = 185;
+    startLabel2.x = sceneWidth/2 - startLabel2.width/2;
     startLabel2.y = 300;
     startScene.addChild(startLabel2);
 
@@ -151,6 +150,8 @@ gameOverText.x = sceneWidth / 2 - gameOverText.width / 2;
 gameOverText.y = sceneHeight / 2 - 160;
 gameOverScene.addChild(gameOverText);
 
+
+
 // 3B - make "play again?" button
 let playAgainButton = new PIXI.Text("Play Again?", buttonStyle);
 playAgainButton.x = sceneWidth / 2 - playAgainButton.width / 2;
@@ -168,7 +169,7 @@ gameOverScene.addChild(playAgainButton);
   let textStyle = {
         fill: 0xffffff,
         fontSize: 18,
-        fontFamily: "Verdana",
+        fontFamily: "Press Start 2P",
         stroke: 0xff0000,
         strokeThickness: 4
     }
@@ -181,6 +182,12 @@ gameOverScene.addChild(playAgainButton);
     lifeLabel.x = 5;
     lifeLabel.y = 26;
     gameScene.addChild(lifeLabel);
+
+    gameOverScoreLabel = new PIXI.Text("", textStyle);
+    gameOverScoreLabel.x = sceneWidth/2 - gameOverScoreLabel.width/2;
+    gameOverScoreLabel.y = sceneHeight/2;
+    gameOverScene.addChild(gameOverScoreLabel);
+
 }
 function startGame()
 {
@@ -240,13 +247,13 @@ let mousePosition = app.renderer.events.pointer.global;
     c.move(dt);
     if (c.x <= c.radius || c.x >= sceneWidth - c.radius)
     {
-      c.reflectX();
-      c.move(dt);
+      c.reflectX(sceneWidth);
+      //c.move(dt);
     }
     if (c.y <= c.radius || c.y >= sceneHeight - c.radius)
     {
-      c.reflectY();
-      c.move(dt);
+      c.reflectY(sceneHeight);
+      //c.move(dt);
     }
     
     for (let b of bullets)
@@ -260,7 +267,7 @@ let mousePosition = app.renderer.events.pointer.global;
         b.isAlive = false;
         increaseScoreBy(1);
 
-        createExplosion(c.x,c.y,64,64);
+        createMiniExplosion(c.x,c.y,64,64);
 
         break;
       }
@@ -275,6 +282,8 @@ let mousePosition = app.renderer.events.pointer.global;
       gameScene.removeChild(c);
       c.isAlive = false;
       decreaseLifeBy(20);
+
+      createExplosion(c.x,c.y,64,64);
     }
 
 
@@ -325,6 +334,64 @@ function createCircles(numCircles = 10)
     gameScene.addChild(c);
   }
 
+  for (let i = 0; i < numCircles/4; i++)
+  {
+    let c = new WrappingCircle(10, 0xff00ff);
+    c.x = Math.random() * (sceneWidth - 50) + 25;
+    c.y = Math.random() * (sceneHeight - 400) + 25;
+    circles.push(c);
+    gameScene.addChild(c);
+  }
+
+  for (let i = 0; i < numCircles/3; i++)
+  {
+    let c = new SeekingCircle(5, 0xff0000);
+    c.x = Math.random() * (sceneWidth - 50) + 25;
+    c.y = Math.random() * (sceneHeight - 400) + 25;
+    c.speed = 60;
+    c.activate(ship);
+    circles.push(c);
+    gameScene.addChild(c);
+  }
+  //orthogonal wrapping circles
+for (let i = 0; i < numCircles / 4; i++) {
+  let c = new WrappingCircle(10, 0x00ff00);
+  c.speed = Math.random() * 100 + 100;
+  if (Math.random() < 0.5) {
+    c.x = Math.random() * (sceneWidth - 50) + 25;
+    c.y = Math.random() * 100 + c.radius * 2;
+    c.fwd = { x: 0, y: 1 };
+  } else {
+    c.x = Math.random() * 25 + c.radius * 2;
+    c.y = Math.random() * (sceneHeight - 80) - c.radius * 2;
+    c.fwd = { x: 1, y: 0 };
+  }
+  circles.push(c);
+  gameScene.addChild(c);
+}
+
+
+  for (let i = 0; i < numCircles/4; i++)
+  {
+    let c = new Circle(10, 0x00ffff);
+    c.speed = Math.random() * 100 + 100;
+    if (Math.random() < 0.5)
+    {
+      c.x = Math.random() * (sceneWidth - 50) + 25;
+      c.y = Math.random() * 100 + c.radius;
+      c.fwd = {x:0, y:1};
+    }
+    else
+    {
+      c.x = Math.random() *25 + c.radius;
+      c.y = Math.random() * (sceneHeight - 80) + c.radius;
+      c.fwd = {x:1, y:0};
+    }
+
+    circles.push(c);
+    gameScene.addChild(c);
+  }
+
 }
 
 function loadLevel(){
@@ -354,6 +421,9 @@ function end()
 
   gameOverScene.visible = true;
   gameScene.isVisible = false;
+
+  gameOverScoreLabel.text = `Your final level: ${levelNum}\nYour final score: ${score}`;
+  gameOverScoreLabel.x = sceneWidth/2 - gameOverScoreLabel.width/2;
 }
 
 function fireBullet()
@@ -379,7 +449,7 @@ function fireBullet()
   shootSound.play();
 }
 
-function loadSpriteSheet()
+function loadSpriteSheet(index = 0)
 {
   let spritesheet = PIXI.Texture.from("images/explosions.png");
   let width = 64;
@@ -391,11 +461,10 @@ function loadSpriteSheet()
   {
     let frame = new PIXI.Texture({
       source: spritesheet,
-      frame: new PIXI.Rectangle(i*width, 64, width, height)
+      frame: new PIXI.Rectangle(i*width, height*index, width, height)
     });
     textures.push(frame);
   }
-
   return textures;
 }
 
@@ -406,6 +475,22 @@ function createExplosion(x,y,frameWidth, frameHeight)
   let w2 = frameWidth/2;
   let h2 = frameHeight/2;
   let expl = new PIXI.AnimatedSprite(explosionTextures);
+  expl.x = x - w2;
+  expl.y = y - h2;
+  expl.animationSpeed = 1/7;
+  expl.loop = false;
+  expl.onComplete = () => gameScene.removeChild(expl);
+  explosions.push(expl);
+  gameScene.addChild(expl);
+  expl.play();
+}
+
+
+function createMiniExplosion(x,y,frameWidth, frameHeight)
+{
+  let w2 = frameWidth/2;
+  let h2 = frameHeight/2;
+  let expl = new PIXI.AnimatedSprite(miniExplosionTextures);
   expl.x = x - w2;
   expl.y = y - h2;
   expl.animationSpeed = 1/7;
