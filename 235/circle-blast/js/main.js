@@ -87,7 +87,7 @@ fireballSound = new Howl({
 });
 
   // #7 - Load sprite sheet
-
+  explosionTextures = loadSpriteSheet();
   // #8 - Start update loop
   app.ticker.add(gameLoop);
 
@@ -188,6 +188,9 @@ function startGame()
     gameScene.visible = true;
     gameOverScene.visible = false;
 
+    app.view.onclick = fireBullet;
+    levelNum = 1;
+
     increaseScoreBy(0);
     decreaseLifeBy(0);
 
@@ -246,6 +249,25 @@ let mousePosition = app.renderer.events.pointer.global;
       c.move(dt);
     }
     
+    for (let b of bullets)
+    {
+      if (rectsIntersect(c, b))
+      {
+        fireballSound.play();
+        gameScene.removeChild(c);
+        c.isAlive = false;
+        gameScene.removeChild(b);
+        b.isAlive = false;
+        increaseScoreBy(1);
+
+        createExplosion(c.x,c.y,64,64);
+
+        break;
+      }
+    }
+
+
+
     //#5 happening here to save a little bit of looping
     if (c.isAlive && rectsIntersect(c, ship))
     {
@@ -261,10 +283,17 @@ let mousePosition = app.renderer.events.pointer.global;
   }
 
   // #4 - Move Bullets
+  for (let b of bullets)
+  {
+    b.move(dt);
+
+    
+  }
 
   // #6 - Now do some clean up
 
   circles = circles.filter((c) => c.isAlive);
+  bullets = bullets.filter((b) => b.isAlive);
 
 
   // #7 - Is game over?
@@ -275,6 +304,12 @@ if (life <= 0){
 
 
   // #8 - Load next level
+
+  if (circles.length == 0)
+  {
+    levelNum++;
+    loadLevel();
+  }
 }
 
 
@@ -309,6 +344,74 @@ function end()
   circles.forEach((c) => gameScene.removeChild(c));
   circles = [];
 
+  explosions.forEach(e => gameScene.removeChild(e));
+  explosions = [];
+
+  bullets.forEach(b => gameScene.removeChild(b));
+  bullets = [];
+
+  app.view.onclick = null;
+
   gameOverScene.visible = true;
   gameScene.isVisible = false;
+}
+
+function fireBullet()
+{
+  let spaceBetween = 10;
+  if (paused) return;
+  if (levelNum < 2)
+  {
+    let b = new Bullet(0xffffff, ship.x, ship.y);
+    bullets.push(b);
+    gameScene.addChild(b);
+    shootSound.play();
+    console.log("do we even get here");
+    return;
+  }
+
+  for (let x = ship.x - spaceBetween; x <= ship.x + spaceBetween; x += spaceBetween)
+  {
+    let b = new Bullet(0xffffff, x, ship.y);
+    bullets.push(b);
+    gameScene.addChild(b);
+  }
+  shootSound.play();
+}
+
+function loadSpriteSheet()
+{
+  let spritesheet = PIXI.Texture.from("images/explosions.png");
+  let width = 64;
+  let height = 64;
+  let numFrames = 16;
+  let textures = [];
+
+  for (let i = 0; i < numFrames; i++)
+  {
+    let frame = new PIXI.Texture({
+      source: spritesheet,
+      frame: new PIXI.Rectangle(i*width, 64, width, height)
+    });
+    textures.push(frame);
+  }
+
+  return textures;
+}
+
+
+
+function createExplosion(x,y,frameWidth, frameHeight)
+{
+  let w2 = frameWidth/2;
+  let h2 = frameHeight/2;
+  let expl = new PIXI.AnimatedSprite(explosionTextures);
+  expl.x = x - w2;
+  expl.y = y - h2;
+  expl.animationSpeed = 1/7;
+  expl.loop = false;
+  expl.onComplete = () => gameScene.removeChild(expl);
+  explosions.push(expl);
+  gameScene.addChild(expl);
+  expl.play();
 }
