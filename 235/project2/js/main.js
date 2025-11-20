@@ -56,7 +56,7 @@ function __init__(e)
     if (localStorage.getItem(LOCAL_STORAGEKEY) != null)
     {
         let json = JSON.parse(localStorage.getItem(LOCAL_STORAGEKEY));
-        //console.log(json);
+        
         searchData = searchData.concat(json);
     }
 
@@ -72,6 +72,9 @@ function __init__(e)
     
 }
 
+/////////////////////////////////////////////////////////////////////////////////
+///                                 requesting geolocation (doesn't work on mobile if settings prohibits geolocation)
+/////////////////////////////////////////////////////////////////////////////////
 function requestGeo()
 {
     if (navigator.geolocation) {
@@ -81,15 +84,21 @@ function requestGeo()
     } 
 }
 
+/////////////////////////////////////////////////////////////////////////////////
+///                                 on exit
+/////////////////////////////////////////////////////////////////////////////////
 function uploadItems(e)
 {
     let stringify = JSON.stringify(searchData);
     localStorage.setItem(LOCAL_STORAGEKEY, stringify);
 }
+
+/////////////////////////////////////////////////////////////////////////////////
+///                                 send off requests
+/////////////////////////////////////////////////////////////////////////////////
 function newCityRequested()
 {
-    //e.preventDefaults();
-    //console.log("submission works!");
+    
     let requestedCity = citySearch.value;
     if (requestedCity.length <= 1 || (!/^[A-Za-z]+/.test(requestedCity) && searchTerm.value != "postalcode"))
         { 
@@ -100,7 +109,7 @@ function newCityRequested()
 
     if (potentialFind != undefined)
     {
-        //console.log(potentialFind);
+        
         loadData(potentialFind.lat, potentialFind.long);
         return;
     }
@@ -120,9 +129,12 @@ function newCityRequested()
     xhr.send();
 }
 
+/////////////////////////////////////////////////////////////////////////////////
+///                                 set up multichoice
+/////////////////////////////////////////////////////////////////////////////////
 function cityRequestLoaded(e)
 {
-    //console.log("success");
+    
     let xhr = e.target;
     let json = JSON.parse(xhr.responseText);
 
@@ -141,7 +153,7 @@ function cityRequestLoaded(e)
     citySearchList.innerHTML = "";
     for (const e of json)
     {
-        //console.log(e);
+        
         if (e.type != "hamlet") //ignoring really really tiny towns in searchs
         {
 
@@ -155,28 +167,32 @@ function cityRequestLoaded(e)
         }
     }
 
-    //city.innerHTML = citySearch.value;
-
-    //console.log(json);
-    //loadWeather(json[0].lat, json[0].lon);
+   
 }
 
+/////////////////////////////////////////////////////////////////////////////////
+///                                 API QUERY FAIL
+/////////////////////////////////////////////////////////////////////////////////
 function cityRequestError(e)
 {
-    //console.log("PROBLEM!");
+    cityData.innerHTML = "Error getting your requested location.";
 }
 
 
 
-
+/////////////////////////////////////////////////////////////////////////////////
+///                                 set up clock
+/////////////////////////////////////////////////////////////////////////////////
 function initializeClock()
 {
     setInterval(updateClock, 1000);    
 }
 
+/////////////////////////////////////////////////////////////////////////////////
+///                                 updating clock
+/////////////////////////////////////////////////////////////////////////////////
 function updateClock()
 {
-    //console.log("hi");
     let t = new Date();
     let hrs = t.getHours();
     let pm = hrs > 12;
@@ -196,18 +212,21 @@ function updateClock()
 function __successfulLocation(position)
 {
     successfulQueries = true;
-    //console.log(position);
     loadData(position.coords.latitude, position.coords.longitude);
 }
 
+/////////////////////////////////////////////////////////////////////////////////
+///                                 loading city based on a multichoice
+/////////////////////////////////////////////////////////////////////////////////
 function loadCityListRequest(e) 
 {
-    //console.log(e.target.dataset.lat);
-    //console.log(e.target.dataset.long);
     citySearchList.innerHTML = "";
     loadData(e.target.dataset.lat, e.target.dataset.long);
 }
 
+/////////////////////////////////////////////////////////////////////////////////
+///                                 grouping of loading
+/////////////////////////////////////////////////////////////////////////////////
 function loadData(lat, long)
 {
     loadCity(lat, long);
@@ -237,7 +256,6 @@ function cityLoaded(e)
     let xhr = e.target;
 
     let cityData = JSON.parse(xhr.responseText);
-    //console.log(cityData);
 
     if (searchTerm.value == "country")
     {
@@ -271,12 +289,11 @@ function cityLoaded(e)
 
 
 /////////////////////////////////////////////////////////////////////////////////
-///                                 GETTING THE CAT ANIMATED
+///                                 GETTING THE SITE ANIMATED
 /////////////////////////////////////////////////////////////////////////////////
 function animateSite(temp, weather_code)
 {
     let weather_category = getWeatherCategory(weather_code);
-    //console.log(weather_category);
     switch (weather_category)
     {
         case WEATHER_CONDITIONS.CLEAR:
@@ -325,6 +342,7 @@ function animateSite(temp, weather_code)
             {
                 document.body.style.backgroundColor = "#3c4448ff";
                 document.documentElement.style.setProperty("--word-color", "white");
+                break;
             }
         
         default: 
@@ -385,10 +403,7 @@ function loadWeather(latitude, longitude)
 function dataLoaded(e)
 {
     let xhr = e.target;
-    //console.log(xhr.responseText);
-    //dataDump.innerHTML = xhr.responseText;
     let wData = JSON.parse(xhr.responseText);
-    //console.log(wData);
     
     setTemp(wData.current.temperature_2m);
 
@@ -447,6 +462,10 @@ const WEATHER_CONDITIONS = Object.freeze(
         THUNDER: 7
     }
 )
+
+/////////////////////////////////////////////////////////////////////////////////
+///                                 Weather category
+/////////////////////////////////////////////////////////////////////////////////
 function getWeatherCategory(weather_code)
 {
     switch(weather_code)
@@ -462,6 +481,10 @@ function getWeatherCategory(weather_code)
         default: return WEATHER_CONDITIONS.CLEAR;
     }
 }
+
+/////////////////////////////////////////////////////////////////////////////////
+///                                 Get generic description
+/////////////////////////////////////////////////////////////////////////////////
 function getWeatherDescription(weather_code)
 {
     switch (weather_code)

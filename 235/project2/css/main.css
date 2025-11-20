@@ -255,6 +255,14 @@ p
     }
     #citySearch
     {
-        width: 150px;
+        width: 160px;
+    }
+    #citySearch, #submit
+    {
+        margin-top: 5px;
+    }
+    input, select
+    {
+        font-size: 30px;
     }
 }
