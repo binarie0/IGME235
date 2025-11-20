@@ -1,9 +1,12 @@
 
 let temperature;
 let city;
+let country;
+let searchTerm;
 let weather_type;
 let time;
 let citySearch;
+let tempUnits;
 let citySearchList;
 const WEATHER_API = "https://api.open-meteo.com/v1/forecast?";
 
@@ -35,6 +38,9 @@ function __init__(e)
     time = document.getElementById("time");
     citySearch = document.getElementById("citySearch");
     citySearchList = document.getElementById("searchList");
+    country = document.getElementById("country");
+    searchTerm = document.getElementById("searchTerm");
+    tempUnits = document.getElementById("units");
     
     initializeClock();
 
@@ -45,30 +51,67 @@ function __init__(e)
             newCityRequested();
         }
     });
-
-    searchData = localStorage.getItem(LOCAL_STORAGEKEY) == null ? [] : JSON.parse(localStorage.getItem(LOCAL_STORAGEKEY));
-    window.onbeforeunload = (e) =>
+    if (localStorage.getItem(LOCAL_STORAGEKEY) != null)
     {
-        localStorage.setItem(LOCAL_STORAGEKEY, JSON.stringify(searchData));
+        let json = JSON.parse(localStorage.getItem(LOCAL_STORAGEKEY));
+        //console.log(json);
+        searchData = searchData.concat(json);
     }
 
+    window.onclose = uploadItems;
+    window.onbeforeunload = uploadItems;
 
+    requestGeo();
+
+    document.getElementById("currentLocation").addEventListener("click", (e) => requestGeo());
+
+    tempUnits.addEventListener("change", (e) =>
+    {
+        console.log(tempUnits.value);
+        
+    });
+}
+
+function requestGeo()
+{
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(__successfulLocation, __errorLocation);
     } else {
         temperature.innerHTML = "Geolocation is not supported by this browser.";
-    }    
+    } 
 }
 
+function uploadItems(e)
+{
+    let stringify = JSON.stringify(searchData);
+    localStorage.setItem(LOCAL_STORAGEKEY, stringify);
+}
 function newCityRequested()
 {
     //e.preventDefaults();
-    console.log("submission works!");
+    //console.log("submission works!");
     let requestedCity = citySearch.value;
-    if (requestedCity.length <= 1 || !/^[A-Za-z]+/.test(requestedCity)) return;
+    if (requestedCity.length <= 1 || (!/^[A-Za-z]+/.test(requestedCity) && searchTerm.value != "postalcode"))
+        { 
+            return;
+        }
 
-    console.log("hello");
-    let dataURL = CITY_SEARCH_API + "city=" + requestedCity;
+    let potentialFind = searchData.find(s => s.city == requestedCity);
+
+    if (potentialFind != undefined)
+    {
+        //console.log(potentialFind);
+        loadData(potentialFind.lat, potentialFind.long);
+        return;
+    }
+
+
+    let searchParameter = searchTerm.value;
+    let dataURL = CITY_SEARCH_API + searchParameter + "=" + requestedCity;
+    if (searchTerm.value == "postalcode")
+    {
+        dataURL += `&countrycodes=US`;
+    }
 
     let xhr = new XMLHttpRequest();
     xhr.onload = cityRequestLoaded;
@@ -82,11 +125,23 @@ function cityRequestLoaded(e)
     //console.log("success");
     let xhr = e.target;
     let json = JSON.parse(xhr.responseText);
-    
+
+    if (json == undefined || json.length == 0)
+    {
+        cityData.innerHTML = "Error getting your requested location.";
+        return;
+    }
+    if (json.length == 1)
+    {
+        citySearchList.innerHTML = "";
+        loadData(json[0].lat, json[0].lon);
+        return;
+    }
+
     citySearchList.innerHTML = "";
     for (const e of json)
     {
-        console.log(e);
+        //console.log(e);
         if (e.type != "hamlet") //ignoring really really tiny towns in searchs
         {
 
@@ -108,7 +163,7 @@ function cityRequestLoaded(e)
 
 function cityRequestError(e)
 {
-    console.log("PROBLEM!");
+    //console.log("PROBLEM!");
 }
 
 
@@ -142,13 +197,7 @@ function __successfulLocation(position)
 {
     successfulQueries = true;
     //console.log(position);
-    loadWeather(position.coords.latitude, position.coords.longitude);
-    loadCity(position.coords.latitude, position.coords.longitude);
-
-    if (successfulQueries)
-    {
-        animateCat(temp, weather_code);
-    }
+    loadData(position.coords.latitude, position.coords.longitude);
 }
 
 function loadCityListRequest(e) 
@@ -156,8 +205,13 @@ function loadCityListRequest(e)
     //console.log(e.target.dataset.lat);
     //console.log(e.target.dataset.long);
     citySearchList.innerHTML = "";
-    loadCity(e.target.dataset.lat, e.target.dataset.long);
-    loadWeather(e.target.dataset.lat, e.target.dataset.long);
+    loadData(e.target.dataset.lat, e.target.dataset.long);
+}
+
+function loadData(lat, long)
+{
+    loadCity(lat, long);
+    loadWeather(lat, long);
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -183,19 +237,34 @@ function cityLoaded(e)
     let xhr = e.target;
 
     let cityData = JSON.parse(xhr.responseText);
-    console.log(cityData);
-    if (cityData.address.city != undefined)
+    //console.log(cityData);
+
+    if (searchTerm.value == "country")
+    {
+        city.innerHTML = cityData.address.country;
+    }
+    else if (cityData.address.suburb != undefined)
+        city.innerHTML = cityData.address.suburb;
+    else if (cityData.address.city != undefined)
         city.innerHTML = cityData.address.city;
     else if (cityData.address.village != undefined)
         city.innerHTML = cityData.address.village;
+    
+    if (searchTerm.value != "country")
+        country.innerHTML = cityData.address.country;
+    else country.innerHTML = "";
 
     successfulQueries &= true;
 
+    if (searchData.findIndex(s => s.city == city.innerHTML) != -1)
+        return;
+
     let c = {
-        city: cityData.innerHTML,
+        city: city.innerHTML,
         lat:cityData.lat,
-        long:cityData.long
+        long:cityData.lon
     };
+
     searchData.push(c);
 }
 
@@ -204,9 +273,62 @@ function cityLoaded(e)
 /////////////////////////////////////////////////////////////////////////////////
 ///                                 GETTING THE CAT ANIMATED
 /////////////////////////////////////////////////////////////////////////////////
-function animateCat(temp, weather_code)
+function animateSite(temp, weather_code)
 {
     let weather_category = getWeatherCategory(weather_code);
+    //console.log(weather_category);
+    switch (weather_category)
+    {
+        case WEATHER_CONDITIONS.CLEAR:
+            {
+                document.body.style.backgroundColor = "lightblue";
+                document.documentElement.style.setProperty("--word-color", "black");
+                break;
+            }
+        case WEATHER_CONDITIONS.CLOUDS:
+            {
+                document.body.style.backgroundColor = "#617d8bff";
+                document.documentElement.style.setProperty("--word-color", "white");
+                break;
+            }
+        case WEATHER_CONDITIONS.DRIZZLE:
+            {
+                document.body.style.backgroundColor = "#737576ff";
+                document.documentElement.style.setProperty("--word-color", "black");
+                break;
+            }
+        case WEATHER_CONDITIONS.FOG:
+            {
+                document.body.style.backgroundColor = "#969696ff";
+                document.documentElement.style.setProperty("--word-color", "black");
+                break;
+            }
+        case WEATHER_CONDITIONS.RAIN:
+            {
+                document.body.style.backgroundColor = "#3c497fff";
+                document.documentElement.style.setProperty("--word-color", "white");
+                break;
+            }
+        case WEATHER_CONDITIONS.SNOW:
+            {
+                document.body.style.backgroundColor = "#c5d9e4ff";
+                document.documentElement.style.setProperty("--word-color", "black");
+                break;
+            }
+        case WEATHER_CONDITIONS.STORM:
+            {
+                document.body.style.backgroundColor = "#535571ff";
+                document.documentElement.style.setProperty("--word-color", "white");
+                break;
+            }
+        case WEATHER_CONDITIONS.THUNDER:
+            {
+                document.body.style.backgroundColor = "#3c4448ff";
+                document.documentElement.style.setProperty("--word-color", "white");
+            }
+        
+        default: 
+    }
 }
 
 
@@ -268,16 +390,27 @@ function dataLoaded(e)
     let wData = JSON.parse(xhr.responseText);
     //console.log(wData);
     
-    temp = Math.round(toFahrenheit(wData.current.temperature_2m));
+    setTemp(wData.current.temperature_2m);
+
     weather_code = wData.current.weather_code;
     let weatherDescription = getWeatherDescription(weather_code);
 
-    temperature.innerText = `${temp}°F`;
+    
     weather_type.innerHTML = weatherDescription;
     
     successfulQueries &= true;
+    animateSite(temp, weather_code);
 }
 
+function setTemp(celsius)
+{
+    temp = celsius;
+    if (tempUnits.value == "F")
+    {
+        temp = Math.round(toFahrenheit(celsius));
+    }
+    temperature.innerText = `${temp}°${tempUnits.value}`;
+}
 
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -318,8 +451,8 @@ function getWeatherCategory(weather_code)
 {
     switch(weather_code)
     {
-        case 0: return WEATHER_CONDITIONS.CLEAR;
-        case 1: case 2: case 3: return WEATHER_CONDITIONS.CLOUDS;
+        case 0: case 1: return WEATHER_CONDITIONS.CLEAR;
+        case 2: case 3: return WEATHER_CONDITIONS.CLOUDS;
         case 45: case 48: return WEATHER_CONDITIONS.FOG;
         case 51: case 53: case 55: case 57: return WEATHER_CONDITIONS.DRIZZLE;
         case 61: case 63: case 65: case 66: case 67: return WEATHER_CONDITIONS.RAIN;

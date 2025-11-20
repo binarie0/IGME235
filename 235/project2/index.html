@@ -3,22 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Cat!</title>
+    <title>Get Your Weather!</title>
     <link rel="stylesheet" href="./css/main.css">
     <script src="./js/main.js"></script>
 </head>
 <body>
-    <h1 id="city"></h1>
-    <h3 id="temp"></h3>
-    <h4 id="weather"></h4>
+    <h1 id="city">-----</h1>
+    <h3 id="country">-----</h3>
+    <h3 id="temp">-----</h3>
+    <h4 id="weather">-----</h4>
     <p id="time">00:00</p>
-    <div id="cat">
-
-    </div>
+    <div id="currentLocation"><p>Use my location</p></div>
     <div id="searchList"></div>
     <div id="search">
-        <label for="citySearch">City name: </label>
+        <select id="searchTerm">
+            <option value="city">City</option>
+            <option value="country">Country</option>
+            <option value="postalcode">Postal Code (US)</option>
+        </select>
         <input type="text" id="citySearch">
+        <select id="units">
+            <option value="C">°C</option>
+            <option value="F" selected>°F</option>
+        </select>
+        
     </div>
     
     
