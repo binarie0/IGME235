@@ -10,6 +10,11 @@
 {
     --word-color: white;
 }
+#submit
+{
+    visibility: hidden;
+    width:120px;
+}
 body
 {
     width: 100%;
@@ -208,6 +213,12 @@ p
     {
         font-size: 20px;
     }
+    #search
+    {
+        flex-wrap:wrap;
+        justify-content:center;
+        left:0;
+    }
     #temp
     {
         font-size: 150px;
@@ -223,15 +234,18 @@ p
         font-size: 50px;
         text-align:center;
     }
-        #search
+    #submit
     {
-        justify-content:center;
-        left:0;
+        visibility: visible;
     }
 }
 
 @media screen and (max-width: 590px)
 {
+    #city
+    {
+        font-size: 70px;
+    }
     #time
     {
         bottom:0;
