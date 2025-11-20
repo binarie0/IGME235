@@ -113,7 +113,7 @@ p
 {
     display: flex;
     flex-basis: auto;
-    flex-wrap:nowrap;
+    flex-wrap:wrap;
     flex-grow:0;
     flex-shrink:0;
     flex-direction: column-reverse;
@@ -147,24 +147,22 @@ p
     {
         height: 300px;
         width: 290px;
-        
-        flex-wrap:wrap;
 
     }
     .placeButton
     {
     
-    width: 50%;
-    border: 2px solid black;
-    margin:0;
-    margin-bottom: 5px;
-    margin-top:5px;
-    margin-right: 5px;
-    font-size: 20px;
-    background-color: rgb(170, 170, 170);
-    font-family: "Cabin", serif;
-    padding: 2px;
-}
+        width: 50%;
+        border: 2px solid black;
+        margin:0;
+        margin-bottom: 5px;
+        margin-top:5px;
+        margin-right: 5px;
+        font-size: 20px;
+        background-color: rgb(170, 170, 170);
+        font-family: "Cabin", serif;
+        padding: 2px;
+    }
     h1
     {
         font-size: 100px;
@@ -209,6 +207,15 @@ p
 
 @media screen and (max-width: 690px)
 {
+    #searchList
+    {
+        height: 300px;
+        width: 290px;
+        bottom: 20%;
+        
+        
+
+    }
     #country
     {
         font-size: 20px;
@@ -237,6 +244,20 @@ p
     #submit
     {
         visibility: visible;
+    }
+    .placeButton
+    {
+    
+        width: 33.3333%;
+        border: 2px solid black;
+        margin:0;
+        margin-bottom: 5px;
+        margin-top:5px;
+        margin-right: 5px;
+        font-size: 10px;
+        background-color: rgb(170, 170, 170);
+        font-family: "Cabin", serif;
+        padding: 2px;
     }
 }
 

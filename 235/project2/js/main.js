@@ -256,11 +256,13 @@ function cityLoaded(e)
     let xhr = e.target;
 
     let cityData = JSON.parse(xhr.responseText);
+    //console.log(cityData);
 
     if (searchTerm.value == "country")
     {
         city.innerHTML = cityData.address.country;
     }
+    
     else if (cityData.address.suburb != undefined)
         city.innerHTML = cityData.address.suburb;
     else if (cityData.address.city != undefined)
