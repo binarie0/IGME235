@@ -26,7 +26,8 @@ body > h1,h2,h3,h4,h5,h6,p
     height: 50px;
     font-size: 20px;
     margin-left: calc(50% - 150px/2);
-    margin-right: calc(50% - 150px/2);;
+    margin-right: calc(50% - 150px/2);
+    margin-top: 10px;
     background-color: white;
     border: 1px solid black;
 }
