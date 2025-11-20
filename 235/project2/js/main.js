@@ -8,6 +8,7 @@ let time;
 let citySearch;
 let tempUnits;
 let citySearchList;
+let submitButton;
 const WEATHER_API = "https://api.open-meteo.com/v1/forecast?";
 
 //this is a free api with a 5000 req daily limit, please don't abuse :3
@@ -41,6 +42,7 @@ function __init__(e)
     country = document.getElementById("country");
     searchTerm = document.getElementById("searchTerm");
     tempUnits = document.getElementById("units");
+    submitButton = document.getElementById("submit");
     
     initializeClock();
 
@@ -61,15 +63,13 @@ function __init__(e)
     window.onclose = uploadItems;
     window.onbeforeunload = uploadItems;
 
-    requestGeo();
-
     document.getElementById("currentLocation").addEventListener("click", (e) => requestGeo());
 
-    tempUnits.addEventListener("change", (e) =>
-    {
-        console.log(tempUnits.value);
-        
-    });
+    submitButton.addEventListener("click", (e) => newCityRequested());
+
+    requestGeo();
+
+    
 }
 
 function requestGeo()
