@@ -2,6 +2,10 @@
     font-family: "Cabin";
     src: url(../media/Cabin-SemiBoldItalic.ttf);
 }
+@font-face {
+    font-family: "CabinReg";
+    src: url(../media/Cabin-Regular.ttf);
+}
 :root
 {
     --word-color: white;
@@ -12,6 +16,7 @@ body
     height: 100%;
     margin:0 auto;
     transition: background-color 2s ease-in-out;
+    overflow: hidden;
 }
 body > h1,h2,h3,h4,h5,h6,p
 {
@@ -44,7 +49,7 @@ body > h1,h2,h3,h4,h5,h6,p
 }
 label, input, select
 {
-    font-family: "Cabin", serif;
+    font-family: "CabinReg", serif;
     font-size:36px;
 }
 label
@@ -133,6 +138,28 @@ p
 }
 
 @media  screen and (max-width: 900px) {
+    #searchList
+    {
+        height: 300px;
+        width: 290px;
+        
+        flex-wrap:wrap;
+
+    }
+    .placeButton
+    {
+    
+    width: 50%;
+    border: 2px solid black;
+    margin:0;
+    margin-bottom: 5px;
+    margin-top:5px;
+    margin-right: 5px;
+    font-size: 20px;
+    background-color: rgb(170, 170, 170);
+    font-family: "Cabin", serif;
+    padding: 2px;
+}
     h1
     {
         font-size: 100px;
@@ -151,15 +178,69 @@ p
 
         width: 100%;
     }
+    #temp
+    {
+        font-size: 100px;
+    }
+    #weather
+    {
+        font-size: 80px;
+    }
+    #country
+    {
+        font-size: 40px;
+    }
     #time
     {
         bottom:10%;
-        right:0;
         margin:0;
         padding:0;
     }
-    select, option
+    select, option, input
     {
-        font-size: 16px;
+        font-size: 30px;
+    }
+}
+
+@media screen and (max-width: 690px)
+{
+    #country
+    {
+        font-size: 20px;
+    }
+    #temp
+    {
+        font-size: 150px;
+    }
+    #weather
+    {
+        font-size: 50px;
+    }
+    #time
+    {
+        bottom:0;
+        width: 100%;
+        font-size: 50px;
+        text-align:center;
+    }
+        #search
+    {
+        justify-content:center;
+        left:0;
+    }
+}
+
+@media screen and (max-width: 590px)
+{
+    #time
+    {
+        bottom:0;
+        width: 100%;
+        font-size: 50px;
+        text-align:center;
+    }
+    #citySearch
+    {
+        width: 150px;
     }
 }
