@@ -24,6 +24,7 @@ let temp;
 let weather_code;
 
 const LOCAL_STORAGEKEY = "WEATHER_APP_ZA_PREVIOUS_SEARCHES";
+const PREFERENCES_STORAGEKEY = "WEATHER_APP_ZA_PREFERENCES";
 let searchData = [];
 
 
@@ -45,6 +46,12 @@ function __init__(e)
     submitButton = document.getElementById("submit");
     
     initializeClock();
+
+    if (localStorage.getItem(PREFERENCES_STORAGEKEY) != null)
+    {
+        tempUnits.value = localStorage.getItem(PREFERENCES_STORAGEKEY);
+    }
+
 
     citySearch.addEventListener("keydown", (e) =>
     {
@@ -91,6 +98,8 @@ function uploadItems(e)
 {
     let stringify = JSON.stringify(searchData);
     localStorage.setItem(LOCAL_STORAGEKEY, stringify);
+
+    localStorage.setItem(PREFERENCES_STORAGEKEY, tempUnits.value);
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -256,7 +265,7 @@ function cityLoaded(e)
     let xhr = e.target;
 
     let cityData = JSON.parse(xhr.responseText);
-    //console.log(cityData);
+    
 
     if (searchTerm.value == "country")
     {
