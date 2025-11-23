@@ -1,0 +1,17 @@
+{
+    "bundles":[{
+        "name":"start",
+        "assets":
+        {
+            "name":"logo",
+            "srcs":"../media/logo.png" 
+        }
+    }
+
+    
+
+
+
+
+]
+}
