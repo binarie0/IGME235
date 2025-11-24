@@ -1,5 +1,10 @@
 ///A scene
-export class Scene extends PIXI.Container {
+class Scene extends PIXI.Container {
+
+    onUpdate = (time) => {};
+    onStart = (assetBundle) => {};
+    onDraw = () => {};
+
     constructor(id) {
         super();
         this.children = [];
@@ -8,10 +13,12 @@ export class Scene extends PIXI.Container {
         this.id = id;
     }
 
+
+
     async initialize() {
-        assets = await PIXI.Assets.loadBundle(this.id, (progress) => console.log(`progress=${(progress * 100).toFixed(2)}%`));
-        this._start();
-        console.log(id + " scene loaded!");
+        this.assets = await PIXI.Assets.loadBundle(this.id, (progress) => console.log(`progress=${(progress * 100).toFixed(2)}%`));
+        this.onStart(this.assets);
+        console.log(this.id + " scene loaded!");
     }
 
     add(child) {
@@ -19,7 +26,15 @@ export class Scene extends PIXI.Container {
         this.children.push(child);
     }
 
-    _start() { }
+    update(dt = 1/60)
+    {
+        this.onUpdate(dt);
+    }
+
+    draw()
+    {
+        this.onDraw();
+    }
 
     async unload() {
         await PIXI.Assets.unloadBundle(this.id);
