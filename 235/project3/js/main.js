@@ -52,10 +52,14 @@ async function __init__()
     //grab stage
     stage = app.stage;
     scenes = new SceneManager(stage);
+
+
+
+    //scene 1 - start scene
     let startScene = scenes.createNewScene("start");
-    startScene.onUpdate = (time) =>
+    startScene.update = (time) =>
     {
-        console.log(time);
+        console.log(`FPS: ${(1 / time).toFixed(0)}`);
     };
     
     
@@ -63,9 +67,8 @@ async function __init__()
     
     
     
-    
-    
-    scenes.setScene(startScene.id);
+    //this must be awaited because sometimes the ticker starts before start scene has been set
+    await scenes.setScene(startScene.id);
 
     app.ticker.add(gameLoop);
 
@@ -76,17 +79,12 @@ async function __init__()
     intCallback.addCallback((val) => console.log(`This is callback 2: ${val}^2 = ${val*val}.`));
     intCallback.setValue(2);
 }
-function clamp(num, lower, upper) {
-    return Math.min(Math.max(num, lower), upper);
-}
 function gameLoop()
 {
     let dt = 1 / app.ticker.FPS;
     //clamp to 1/12 as max
     dt = clamp(dt, 0, 0.083333);
-
     scenes.currentScene.update(dt);
-    scenes.currentScene.draw();
 }
 
 async function switchScene(id)

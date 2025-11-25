@@ -24,7 +24,7 @@ class SceneManager extends PIXI.Container {
     async setScene(id) {
         if (!this.#scenes.has(id)) {
             console.log("Scene does not exist with id " + id + "!");
-            return undefined;
+            return;
         }
         
 
