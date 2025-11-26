@@ -8,7 +8,6 @@ class SceneManager extends PIXI.Container {
     constructor(stage) {
         super();
         this.stage = stage;
-        console.log(this.stage);
         this.#scenes = new Map();
         this.currentScene = undefined;
     }

@@ -63,6 +63,22 @@ async function __init__()
     };
     
     
+    //scene 2 - game scene
+    let gameScene = scenes.createNewScene("game");
+
+    let player = new Player();
+    gameScene.addChild(player);
+
+    gameScene.start = () =>
+    {
+        player.PlayerState.setValue(player.PLAYER_STATE.STATIONARY);
+        player.resetState();
+    }
+
+
+
+
+
     
     
     

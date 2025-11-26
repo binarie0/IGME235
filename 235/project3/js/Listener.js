@@ -15,6 +15,11 @@ class Listener
 
     addCallback(callback = (val) => {})
     {
+        if (callback.length != 1)
+        {
+            throw new Error("Incorrect format for callback, should only be one input.");
+        }
+        
         this.#callbacks.push(callback);
     }
 
