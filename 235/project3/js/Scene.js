@@ -3,6 +3,9 @@ class Scene extends PIXI.Container {
 
     update = (dt) => {};
     start = () => {};
+    onKeyboardDownEvent = (event) => {};
+    onKeyboardUpEvent = (event) => {};
+    onMouseMoveEvent = (event) => {};
 
     constructor(id) {
         super();
