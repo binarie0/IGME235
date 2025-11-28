@@ -3,6 +3,10 @@
 //const {Scene} = require("./Scene");
 const WIDTH = 1280;
 const HEIGHT = 720;
+
+
+const FPS_LS_KEY = "ZDA9250_PROJECT3_PREFERENCES";
+
 const app = new PIXI.Application();
 let started = false;
 let scenes;
@@ -60,6 +64,8 @@ async function __startApp()
     canvas.id = "game";
     document.body.appendChild(canvas);
 
+    
+
 
     //ensure window can handle doc, and if it cant exit
     checkProduction();
@@ -69,6 +75,18 @@ async function __startApp()
     //grab stage
     stage = app.stage;
     scenes = new SceneManager(stage);
+
+    window.onbeforeunload = (e) =>
+    {
+        scenes.free();
+        localStorage.setItem(FPS_LS_KEY, JSON.stringify(showFPS));   
+    }
+
+    let fps_pot = localStorage.getItem(FPS_LS_KEY);
+    if (fps_pot != undefined)
+    {
+        showFPS = JSON.parse(fps_pot);
+    }
 
 
     let lightGreen = 0x1aff1a;
