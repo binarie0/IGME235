@@ -16,7 +16,7 @@ class SceneManager extends PIXI.Container {
         let scene = new Scene(id);
         this.#scenes.set(id, scene);
         this.stage.addChild(scene);
-
+        scene.visible = false;
         return scene;
     }
 
@@ -33,8 +33,9 @@ class SceneManager extends PIXI.Container {
         
         if (this.currentScene != undefined)
             this.stage.removeChild(this.currentScene);
-
+        
         this.currentScene = scene;
+        this.currentScene.visible = true;
         this.stage.addChild(this.currentScene);
     }
 

@@ -10,6 +10,7 @@ let currentScene;
 let stage;
 
 let fontsLoaded = false;
+let showFPS = false;
 window.addEventListener("load", (e) => __init__());
 //window.addEventListener("resize", (e) => checkProduction());
 
@@ -71,6 +72,7 @@ async function __startApp()
 
 
     let lightGreen = 0x1aff1a;
+    let lightRed = 0xff1a1a;
     //all required label and buttons
     let titleLabelStyle = 
     {
@@ -90,6 +92,15 @@ async function __startApp()
         strokeThickness: 2.5
     }
 
+    let toggleButtonStyle = 
+    {
+        fill: lightRed,
+        fontSize: 100,
+        fontFamily: "SuperAdorable",
+        stroke: 0x000000,
+        strokeThickness: 2.5
+    }
+
     let stdLabelStyle =
     {
         fill: lightGreen,
@@ -103,7 +114,7 @@ async function __startApp()
 
 
 
-    //scene 1 - start scene
+    //#region START SCENE
     let startScene = scenes.createNewScene("start");
 
     let title = new PIXI.Text("Ribbit!", titleLabelStyle);
@@ -120,31 +131,124 @@ async function __startApp()
 
     let optionsMenu = new PIXI.Text("Options", stdButtonStyle);
     centerElementX(optionsMenu, WIDTH);
-    optionsMenu.y = 400;
+    optionsMenu.y = 420;
     optionsMenu.interactive = true;
     optionsMenu.buttonMode = true;
     defaultButtonLogic(optionsMenu, lightGreen, stdButtonStyle.fill, (e) => scenes.setScene("options"));
 
+    let credits = new PIXI.Text("Credits", stdButtonStyle);
+    centerElementX(credits, WIDTH);
+    credits.y = 540;
+    credits.interactive = true;
+    credits.buttonMode = true;
+    defaultButtonLogic(credits, lightGreen, stdButtonStyle.fill, (e) => scenes.setScene("credits"));
+
     startScene.addChild(startButton);
     startScene.addChild(optionsMenu);
+    startScene.addChild(credits);
+
+    //#endregion
+    
+    //#region OPTIONS SCENE
+    let optionsScene = scenes.createNewScene("options");
+
+    title = new PIXI.Text("Options", titleLabelStyle);
+    centerElementX(title, WIDTH);
+    title.y = 20;
+    
+    let fpsButton = new PIXI.Text("Show FPS", toggleButtonStyle);
+    centerElementX(fpsButton, WIDTH);
+    fpsButton.y = 300;
+    fpsButton.interactive = true;
+    fpsButton.buttonMode = true;
+
+    //have to do custom logic since the color technically changes
+    fpsButton.on("pointerover", (e) => e.target.style.fill = 0xaaaaaa);
+    fpsButton.on("pointerout", (e) =>  e.target.style.fill = showFPS ? lightGreen:lightRed);
+    fpsButton.on("pointerup", (e) => 
+        {
+            showFPS = !showFPS;
+            e.target.style.fill = showFPS ? lightGreen:lightRed
+        }
+    );
     
     
+    
+    let backButton = new PIXI.Text("Go Back", stdButtonStyle);
+    centerElementX(backButton, WIDTH);
+    backButton.y = 600;
+    backButton.interactive = true;
+    backButton.buttonMode = true;
+    defaultButtonLogic(backButton, lightGreen, stdButtonStyle.fill, (e) => scenes.setScene("start"));
+
+    optionsScene.addChild(title);
+    optionsScene.addChild(fpsButton);
+    optionsScene.addChild(backButton);
+    //TODO: IN GAME SCENE CONNECT THESE TWO TOGETHER
+
+    //#endregion
+
+    //#region CREDITS SCENE
+
+    let creditsScene = scenes.createNewScene("credits");
+
+    title = new PIXI.Text("Credits", titleLabelStyle);
+    centerElementX(title, WIDTH);
+    title.y = 20;
+
+    let creds = new PIXI.Text("A project by Zach Ayers", stdLabelStyle);
+    centerElementX(creds, WIDTH);
+    creds.y = HEIGHT/2 - 30;
+    
+    let otherCreds = new PIXI.Text("Made for IGME 235 | Intro to Game Web Tech", stdLabelStyle);
+    centerElementX(otherCreds, WIDTH);
+    otherCreds.y = HEIGHT/2 + 30;
+
+    backButton = new PIXI.Text("Go Back", stdButtonStyle);
+    centerElementX(backButton, WIDTH);
+    backButton.y = 600;
+    backButton.interactive = true;
+    backButton.buttonMode = true;
+    defaultButtonLogic(backButton, lightGreen, stdButtonStyle.fill, (e) => scenes.setScene("start"));
+    
+
+
+
+    creditsScene.addChild(title);
+    creditsScene.addChild(creds);
+    creditsScene.addChild(otherCreds);
+    creditsScene.addChild(backButton);
+    //#endregion
+
+
+
     //scene 2 - game scene
     let gameScene = scenes.createNewScene("game");
 
+    let fpsListener = new Listener(0);
+    fpsListener.addCallback((frames) => fps.text = `${frames} FPS`);
+    let fps = new PIXI.Text("", stdLabelStyle);
+    fps.x = 10;
+    fps.y = 10;
+    
     let player = new Player();
     player.ChargeTime.addCallback((time) => {
         console.log(`Charge Time: ${time}`);
     })
+    gameScene.addChild(fps);
     gameScene.addChild(player);
 
     gameScene.start = () =>
     {
         player.resetState();
+        //update on start because why not
+        fps.visible = showFPS;
     };
-
     gameScene.update = (dt) => {
         player.update(dt);
+        //update fps counter if needed
+        if (showFPS)
+            fpsListener.setValue(app.ticker.FPS.toFixed(0));
     };
 
     gameScene.onKeyboardDownEvent = (e) =>
@@ -185,13 +289,15 @@ async function __startApp()
     
     //this must be awaited because sometimes the ticker starts before start scene has been set, breaking the chain
     await scenes.setScene(startScene.id);
+
+    app.ticker.add(gameLoop);
 }
 function gameLoop()
 {
     let dt = 1 / app.ticker.FPS;
     //clamp to 1/12 as max
     dt = clamp(dt, 0, 0.083333);
-    scenes.currentScene.update(dt);
+    scenes.update(dt);
 }
 
 async function switchScene(id)

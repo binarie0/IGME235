@@ -15,6 +15,6 @@ function centerElementY(e = new PIXI.Text(""), sceneHeight)
 function defaultButtonLogic(element, hoverColor, defaultColor, onclick = (event) => {})
 {
     element.on("pointerover", (e) => e.target.style.fill = hoverColor);
-    element.on("pointerout", (e) => e.target.style.fill = defaultColor);
-    element.on("pointerup", onclick);
+    element.on("pointerout", (e) =>  e.target.style.fill = defaultColor);
+    element.on("pointerup", (e) => {onclick(e); e.target.style.fill = defaultColor});
 }
