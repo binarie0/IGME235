@@ -4,6 +4,7 @@
 const WIDTH = 1280;
 const HEIGHT = 720;
 
+const TILE_SIZE = 32;
 
 const FPS_LS_KEY = "ZDA9250_PROJECT3_PREFERENCES";
 
@@ -249,7 +250,7 @@ async function __startApp()
     fps.x = 10;
     fps.y = 10;
     
-    let player = new Player();
+    let player = new Player(TILE_SIZE, TILE_SIZE);
     player.ChargeTime.addCallback((time) => {
         console.log(`Charge Time: ${time}`);
     })
