@@ -26,7 +26,7 @@ class Player extends PIXI.Container
     {
         super();
         //set the draw point and the position point to the center
-        this.anchor.set(0.5, 0.5);
+        
         let textures = PIXI.Texture.from("media/player.png");
 
         //the player spritesheet is built

@@ -18,3 +18,9 @@ function defaultButtonLogic(element, hoverColor, defaultColor, onclick = (event)
     element.on("pointerout", (e) =>  e.target.style.fill = defaultColor);
     element.on("pointerup", (e) => {onclick(e); e.target.style.fill = defaultColor});
 }
+
+function random(min = 0, max = 0, floor = true)
+{
+    let val = min + Math.random() * (max - min);
+    return floor?Math.floor(val) : val;
+}

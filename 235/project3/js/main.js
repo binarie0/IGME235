@@ -60,11 +60,21 @@ async function __startApp()
     await app.init({ width: WIDTH, height: HEIGHT});
     console.log("App loaded!");
 
+    //#region BUNDLES
+    PIXI.Assets.addBundle("game",
+        {
+            b1: "media/building1.png",
+            b2: "media/building2.png"
+        }
+    )
+    //#endregion
 
+    //#region DEFAULT STARTUP LOGIC FOR GAME
     let canvas = app.canvas;
     canvas.id = "game";
     document.body.appendChild(canvas);
 
+    app.renderer.background.color = 0x005217;
     
 
 
@@ -75,6 +85,7 @@ async function __startApp()
 
     //grab stage
     stage = app.stage;
+    
     scenes = new SceneManager(stage);
 
     window.onbeforeunload = (e) =>
@@ -88,6 +99,8 @@ async function __startApp()
     {
         showFPS = JSON.parse(fps_pot);
     }
+
+    //#endregion 
 
 
     let lightGreen = 0x1aff1a;
@@ -187,9 +200,14 @@ async function __startApp()
     fpsButton.on("pointerup", (e) => 
         {
             showFPS = !showFPS;
-            e.target.style.fill = showFPS ? lightGreen:lightRed
+            e.target.style.fill = showFPS ? lightGreen:lightRed;
         }
     );
+
+    optionsScene.start = () =>
+    {
+        fpsButton.style.fill = showFPS ? lightGreen:lightRed;
+    }
     
     
     
@@ -203,7 +221,6 @@ async function __startApp()
     optionsScene.addChild(title);
     optionsScene.addChild(fpsButton);
     optionsScene.addChild(backButton);
-    //TODO: IN GAME SCENE CONNECT THESE TWO TOGETHER
 
     //#endregion
 
@@ -249,7 +266,10 @@ async function __startApp()
     let fps = new PIXI.Text("", stdLabelStyle);
     fps.x = 10;
     fps.y = 10;
-    
+
+    let buildingManager = new BuildingSummoner(gameScene, ["media/building1.png", "media/building2.png"]);
+
+    //gameScene.addChild(building);
     let player = new Player(TILE_SIZE, TILE_SIZE);
     player.ChargeTime.addCallback((time) => {
         console.log(`Charge Time: ${time}`);
@@ -264,6 +284,8 @@ async function __startApp()
         fps.visible = showFPS;
     };
     gameScene.update = (dt) => {
+        buildingManager.spawnTimer.setValue(buildingManager.spawnTimer.getValue() - dt);
+        buildingManager.updateMovement(dt);
         player.update(dt);
         //update fps counter if needed
         if (showFPS)
