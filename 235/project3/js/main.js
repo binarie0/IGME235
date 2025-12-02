@@ -262,8 +262,9 @@ async function __startApp()
     let gameScene = scenes.createNewScene("game");
 
     let fpsListener = new Listener(0);
-    fpsListener.addCallback((frames) => fps.text = `${frames} FPS`);
     let fps = new PIXI.Text("", stdLabelStyle);
+    fpsListener.addCallback((frames) => fps.text = `${frames} FPS`);
+    
     fps.x = 10;
     fps.y = 10;
 
