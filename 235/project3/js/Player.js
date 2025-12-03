@@ -110,7 +110,9 @@ class Player extends PIXI.Container
             let totalTime = this.ChargeTime.getValue();
             this.ChargeTime.setValue(0);
 
+            
             //TODO: use totalTime to calculate the distance mr player will go
         }
     }
 }
+

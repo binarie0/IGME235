@@ -268,7 +268,7 @@ async function __startApp()
     fps.x = 10;
     fps.y = 10;
 
-    let buildingManager = new BuildingSummoner(gameScene, ["media/building1.png", "media/building2.png"]);
+    let buildingManager = new BuildingSummoner(gameScene, new Vector2(-150, 0), ["media/building1.png", "media/building2.png"]);
 
     //gameScene.addChild(building);
     let player = new Player(TILE_SIZE, TILE_SIZE);

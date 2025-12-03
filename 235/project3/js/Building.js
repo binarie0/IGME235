@@ -31,17 +31,22 @@ class Building extends PIXI.NineSliceSprite
 
 class   BuildingSummoner extends PIXI.Container
 {
-    #speed = 150;
+    
     #buildings = [];
-    constructor(scene = new Scene(""), buildingStyles = [])
+    spawnTimer = new Listener(0);
+    
+    constructor(scene = new Scene(""), speedPerFrame = new Vector2(0,0), buildingStyles = [])
     {
         super();
+        this.speed = speedPerFrame;
         this.scene = scene;
         this.buildingStyles = buildingStyles;
         this.spawnTimer.addCallback((e) => {
             if (e <= 0) this.#addBuilding()});
     }
-    spawnTimer = new Listener(0);
+
+    
+    
 
     #addBuilding()
     {
@@ -67,23 +72,27 @@ class   BuildingSummoner extends PIXI.Container
         b.buildWidth.setValue(random(7, 15));
         this.#buildings.push(b);
         this.scene.addChild(b);
-        this.spawnTimer.setValue(b.width / this.#speed + 0.5);
+        this.spawnTimer.setValue(b.width / this.speed.length + 0.5);
     }
 
     updateMovement(dt = 1/60)
     {
-        let stillStandingBuildings = [Building];
+        let dist = Vector2.mult(dt, this.speed).x;
+        //update each building
         this.#buildings.forEach((b) => 
         {
-            b.x -= this.#speed*dt;
             
+            b.x += dist;
+            
+            //remove child if the building is out of zone
             if (b.x < -b.width)
             {
                 this.scene.removeChild(b);
-                console.log("hey what");
+                
             }
         });
 
+        //filter out so that we do not keep referencing a building not in scene
         this.#buildings = this.#buildings.filter((b) => b.x > -b.width);
     }
 }
