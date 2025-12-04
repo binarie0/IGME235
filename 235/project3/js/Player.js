@@ -2,6 +2,7 @@ class Player extends PIXI.Container
 {
     //constant for max charge time
     MAX_CHARGE_TIME = Object.freeze(2);
+    POWER = Object.freeze(800);
 
     //ENUM: player states
     PLAYER_STATE = Object.freeze({
@@ -17,11 +18,22 @@ class Player extends PIXI.Container
     
     //this is so things can tie themselves to changes in chargetime
     ChargeTime = new Listener(0);
+    #canCharge = false;
+
+    ignoredBuilding = null;
+
+    Velocity = new Vector2(0,0);
+
+    Gravity = new Vector2(0, this.POWER*0.5);
+
+    #offsetX;
+    #offsetY;
 
 
     constructor(textures, width, height)
     {
         super();
+        
         //set the draw point and the position point to the center
         //the player spritesheet is built
         //stationary (idle) x8
@@ -39,22 +51,48 @@ class Player extends PIXI.Container
                 textureArray.push(frame);
             }
             let anim = new PIXI.AnimatedSprite(textureArray);
+            anim.anchor.set(0.5, 0.5);
+            this.#offsetX = width/2;
+            this.#offsetY = height/2;
+            if (i != 0) anim.loop = false;
             anim.visible = false;
             console.log(anim);
             this.addChild(anim);
         }
-
+        this.position = {x:64, y: 720 - 64};
         this.PlayerState.addCallback((state) => this.#updatePlayer(state));
+    }
+
+    checkCollisions(bs = new BuildingSummoner(null, new Vector2(), null))
+    {
+        bs.buildings.forEach((b) =>
+        {
+            
+            if (b != this.ignoredBuilding && rectsIntersect(this, b))
+            {
+                if (!isLeftOnTopOfRight(this, b))
+                {
+                    this.Velocity = Vector2.add(bs.speed, this.Velocity.componentVectors.y);
+                }
+                else
+                {
+                    this.position.y = b.getBounds().y - this.#offsetY;
+                    this.Velocity = bs.speed;
+                    this.PlayerState.setValue(this.PLAYER_STATE.STATIONARY);
+                    this.ignoredBuilding = b;
+                }
+            }
+        });
     }
 
     #updatePlayer(state = 0)
     {
         console.log(this.children);
         console.log("Player state changed!");
-        for (let i = 0; i < this.children.length; i++)
+        for (const element of this.children)
         {
-            this.children[i].gotoAndStop(0);
-            this.children[i].visible = false;
+            element.gotoAndStop(0);
+            element.visible = false;
         }
 
         this.children[state].play();
@@ -84,6 +122,37 @@ class Player extends PIXI.Container
                 this.ChargeTime.setValue(total);
             }
         }
+
+        let pos = this.position;
+        let vel = this.Velocity;
+        let grav = this.PlayerState.getValue() == this.PLAYER_STATE.JUMPING ? Vector2.mult(dt, this.Gravity) : Vector2.ZERO;
+            
+        this.Velocity = Vector2.add(vel, grav);
+        if (this.Velocity.y > 0) this.ignoredBuilding = null;
+        let dpos = Vector2.mult(dt, this.Velocity);
+            
+        this.position = Vector2.add(pos, dpos);
+        if (this.position.y > HEIGHT - this.#offsetY)
+        {
+            this.position.y = HEIGHT - this.#offsetY;
+            this.PlayerState.setValue(this.PLAYER_STATE.STATIONARY);
+            this.Velocity = Vector2.ZERO;
+        }
+        if (this.position.y < this.#offsetY)
+        {
+            this.position.y = this.#offsetY;
+            this.Velocity = this.Velocity.componentVectors.x;
+        }
+        if (this.position.x < this.#offsetX)
+        {
+            //TODO: Add death state
+        }
+        if (this.position.x > WIDTH - this.#offsetX)
+        {
+            this.position.x = WIDTH - this.#offsetX;
+            this.Velocity = this.Velocity.componentVectors.y;
+        }
+        
     }
 
     //state machine change
@@ -100,19 +169,24 @@ class Player extends PIXI.Container
     {
         if (this.PlayerState.getValue() == this.PLAYER_STATE.CHARGING)
         {
-            console.log("Mouse Position!");
-            console.log(this.MousePosition);
-            this.PlayerState.setValue(this.PLAYER_STATE.JUMPING);
             let totalTime = this.ChargeTime.getValue();
             this.ChargeTime.setValue(0);
-
+            totalTime = Math.max(0.1, totalTime);
             
-            //TODO: use totalTime to calculate the distance mr player will go
-
-            let dir = Vector2.sub(this.MousePosition, Vector2.fromVector2Like(this.position));
+            let dir = Vector2.sub(this.MousePosition, this.position);
             dir = dir.normalized;
-            console.log("Player direction!");
-            console.log(dir);
+            if (dir.y > 0) 
+            {
+                this.PlayerState.setValue(this.PLAYER_STATE.STATIONARY);
+                return;
+            }
+            
+            this.PlayerState.setValue(this.PLAYER_STATE.JUMPING);
+            
+
+            this.Velocity = Vector2.mult(Math.sqrt(totalTime) * this.POWER, dir);
+
+
         }
     }
 }

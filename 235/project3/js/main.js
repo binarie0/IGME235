@@ -1,6 +1,4 @@
 "use strict";
-//const {SceneManager} = require("./SceneManager");
-//const {Scene} = require("./Scene");
 const WIDTH = 1280;
 const HEIGHT = 720;
 
@@ -66,6 +64,7 @@ async function __startApp()
             b1: "media/building1.png",
             b2: "media/building2.png",
             bg: "media/bg.png",
+            bg2: "media/bg2.png",
             player: 'media/player.png',
             cursor: 'media/cursor.png'
         }
@@ -144,7 +143,7 @@ async function __startApp()
         fontSize: 50,
         fontFamily: "SuperAdorable",
         stroke: 0x000000,
-        strokeThickness: 1
+        strokeThickness: 2
     }
 
 
@@ -295,16 +294,20 @@ async function __startApp()
 
     let buildingManager = new BuildingSummoner(gameScene, new Vector2(-150, 0), ["media/building1.png", "media/building2.png"]);
     
-    let bg = new PIXI.Sprite(await PIXI.Assets.load('bg'));
+    let bg = new PIXI.Sprite(await PIXI.Assets.load('bg2'));
     gameScene.addChild(bg);
-    //gameScene.addChild(building);
+
+
     let player = new Player(await PIXI.Assets.load('player'), TILE_SIZE*4, TILE_SIZE*4);
     player.ChargeTime.addCallback((time) => {
         console.log(`Charge Time: ${time}`);
     })
 
+
     gameScene.addChild(fps);
     gameScene.addChild(time);
+    
+    gameScene.addChild(buildingManager);
     gameScene.addChild(player);
 
     gameScene.start = () =>
@@ -315,10 +318,16 @@ async function __startApp()
         fps.visible = showFPS;
     };
     gameScene.update = (dt) => {
+
         elapsedTimeListener.setValue(elapsedTimeListener.getValue() + dt);
+
         buildingManager.spawnTimer.setValue(buildingManager.spawnTimer.getValue() - dt);
+
         buildingManager.updateMovement(dt);
+
+        player.checkCollisions(buildingManager);
         player.update(dt);
+
         //update fps counter if needed
         if (showFPS)
             fpsListener.setValue(app.ticker.FPS.toFixed(0));
@@ -338,7 +347,11 @@ async function __startApp()
     }
     gameScene.onMouseMoveEvent = (e) =>
     {
-        player.MousePosition = new Vector2(e.x, e.y);
+        //get relative position of cursor to the canvas
+        let rect = canvas.getBoundingClientRect();
+        let rel_x = e.clientX - rect.left;
+        let rel_y = e.clientY - rect.top;
+        player.MousePosition = new Vector2(rel_x, rel_y);
     }
 
 
@@ -369,13 +382,17 @@ function gameLoop()
     let dt = 1 / app.ticker.FPS;
     //clamp to 1/12 as max
     dt = clamp(dt, 0, 0.083333);
+
+    //update the current scene with deltatime
     scenes.update(dt);
 }
 
 async function switchScene(id)
 {
+    //set the scene
     await scenes.setScene(id);
 
+    //if error, freak out!
     if (scenes.currentScene == undefined)
     {
         console.log("Error finding " + id + " in loaded scenes. Check spelling!");

@@ -24,3 +24,26 @@ function random(min = 0, max = 0, floor = true)
     let val = min + Math.random() * (max - min);
     return floor?Math.floor(val) : val;
 }
+
+// bounding box collision detection - it compares PIXI.Rectangles
+function rectsIntersect(a,b){
+	let ab = a.getBounds();
+	let bb = b.getBounds();
+	return ab.x + ab.width > bb.x && ab.x < bb.x + bb.width && ab.y + ab.height > bb.y && ab.y < bb.y + bb.height;
+}
+
+function isLeftToLeftOfRight(a,b)
+{
+    let ab = a.getBounds();
+    let bb = b.getBounds();
+    return ab.x + ab.width > bb.x;
+}
+
+function isLeftOnTopOfRight(a, b)
+{
+    const padding = 15;
+    let ab = a.getBounds();
+    let bb = b.getBounds();
+
+    return ab.y + ab.height < bb.y + padding;
+}

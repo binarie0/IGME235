@@ -116,4 +116,9 @@ class Vector2 {
     {
         return {x: input.x, y: input.y};
     }
+
+    static get ZERO()
+    {
+        return new Vector2(0,0);
+    }
 }
