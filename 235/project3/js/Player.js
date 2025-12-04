@@ -10,6 +10,8 @@ class Player extends PIXI.Container
         JUMPING: 2
     });
 
+    MousePosition = new Vector2(0, 0);
+
     //this is so things can tie themselves to changes in player state
     PlayerState = new Listener(this.PLAYER_STATE.STATIONARY);
     
@@ -17,18 +19,10 @@ class Player extends PIXI.Container
     ChargeTime = new Listener(0);
 
 
-    
-    //local animations for the player
-    #animations = [];
-
-
-    constructor(width, height)
+    constructor(textures, width, height)
     {
         super();
         //set the draw point and the position point to the center
-        
-        let textures = PIXI.Texture.from("media/player.png");
-
         //the player spritesheet is built
         //stationary (idle) x8
         //charging x8
@@ -45,26 +39,26 @@ class Player extends PIXI.Container
                 textureArray.push(frame);
             }
             let anim = new PIXI.AnimatedSprite(textureArray);
-            this.#animations.push(anim);
+            anim.visible = false;
+            console.log(anim);
             this.addChild(anim);
         }
 
-        this.PlayerState.addCallback(this.#updatePlayer);
+        this.PlayerState.addCallback((state) => this.#updatePlayer(state));
     }
 
-    #updatePlayer(state)
+    #updatePlayer(state = 0)
     {
-        /* TODO: UNCOMMENT WHEN PLAYER IS SET UP
+        console.log(this.children);
         console.log("Player state changed!");
-        for (const a of this.#animations)
+        for (let i = 0; i < this.children.length; i++)
         {
-            a.gotoAndStop(0);
-            a.visible = false;
+            this.children[i].gotoAndStop(0);
+            this.children[i].visible = false;
         }
 
-        this.#animations[state].play();
-        this.#animations[state].visible = true;
-        */
+        this.children[state].play();
+        this.children[state].visible = true;
         
     }
 
@@ -106,12 +100,19 @@ class Player extends PIXI.Container
     {
         if (this.PlayerState.getValue() == this.PLAYER_STATE.CHARGING)
         {
+            console.log("Mouse Position!");
+            console.log(this.MousePosition);
             this.PlayerState.setValue(this.PLAYER_STATE.JUMPING);
             let totalTime = this.ChargeTime.getValue();
             this.ChargeTime.setValue(0);
 
             
             //TODO: use totalTime to calculate the distance mr player will go
+
+            let dir = Vector2.sub(this.MousePosition, Vector2.fromVector2Like(this.position));
+            dir = dir.normalized;
+            console.log("Player direction!");
+            console.log(dir);
         }
     }
 }

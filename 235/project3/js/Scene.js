@@ -13,6 +13,7 @@ class Scene extends PIXI.Container {
         this.active = false;
         this.assets = undefined;
         this.id = id;
+        this.interactive = true;
     }
 
 

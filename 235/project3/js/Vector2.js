@@ -26,8 +26,9 @@ class Vector2 {
 
     /**The length of the vector. */
     get length()
-    {
-        return Math.sqrt(this.lengthSquared);
+    {   
+        let num = Math.sqrt(this.lengthSquared);
+        return num;
     }
 
     /**The length squared.*/
@@ -41,8 +42,8 @@ class Vector2 {
      */
     get normalized()
     {
-        let len = length;
-        return new Vector2(this.x / len, this.y / len);
+        
+        return Vector2.mult(1/this.length, this);
     }
 
     /** The vector with its axes flipped.
@@ -104,5 +105,15 @@ class Vector2 {
     static fromVector2Like(input = {x,y})
     {
         return new Vector2(input.x, input.y);
+    }
+
+    /**Converts a vector input into a similar-to-vector output
+     * 
+     * @param {*} input 
+     * @returns 
+     */
+    static toVector2Like(input = new Vector2(0,0))
+    {
+        return {x: input.x, y: input.y};
     }
 }

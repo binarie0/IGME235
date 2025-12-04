@@ -64,7 +64,10 @@ async function __startApp()
     PIXI.Assets.addBundle("game",
         {
             b1: "media/building1.png",
-            b2: "media/building2.png"
+            b2: "media/building2.png",
+            bg: "media/bg.png",
+            player: 'media/player.png',
+            cursor: 'media/cursor.png'
         }
     )
     //#endregion
@@ -86,7 +89,9 @@ async function __startApp()
     //grab stage
     stage = app.stage;
     
+    
     scenes = new SceneManager(stage);
+    
 
     window.onbeforeunload = (e) =>
     {
@@ -136,7 +141,7 @@ async function __startApp()
     let stdLabelStyle =
     {
         fill: lightGreen,
-        fontSize: 32,
+        fontSize: 50,
         fontFamily: "SuperAdorable",
         stroke: 0x000000,
         strokeThickness: 1
@@ -260,31 +265,57 @@ async function __startApp()
 
     //scene 2 - game scene
     let gameScene = scenes.createNewScene("game");
+    gameScene.cursor = "url(media/cursor.png) 32 32, crosshair";
 
+    
+    let elapsedTimeListener = new Listener(-1);
+    let roundedTimeListener = new Listener(-1);
     let fpsListener = new Listener(0);
     let fps = new PIXI.Text("", stdLabelStyle);
-    fpsListener.addCallback((frames) => fps.text = `${frames} FPS`);
+
+    fpsListener.addCallback((frames) => 
+        {
+            fps.text = `${frames} FPS`;
+        });
     
-    fps.x = 10;
+    fps.x = WIDTH - 10;
     fps.y = 10;
+    fps.anchor.set(1,0);
+    
+    let time = new PIXI.Text("", stdLabelStyle);
+    time.x = 10;
+    time.y = 10;
+    
+    elapsedTimeListener.addCallback((time) => roundedTimeListener.setValue(Math.floor(time)));
+    roundedTimeListener.addCallback((r_time) => 
+        {
+            time.text = `${r_time}`;
+        });
+
 
     let buildingManager = new BuildingSummoner(gameScene, new Vector2(-150, 0), ["media/building1.png", "media/building2.png"]);
-
+    
+    let bg = new PIXI.Sprite(await PIXI.Assets.load('bg'));
+    gameScene.addChild(bg);
     //gameScene.addChild(building);
-    let player = new Player(TILE_SIZE, TILE_SIZE);
+    let player = new Player(await PIXI.Assets.load('player'), TILE_SIZE*4, TILE_SIZE*4);
     player.ChargeTime.addCallback((time) => {
         console.log(`Charge Time: ${time}`);
     })
+
     gameScene.addChild(fps);
+    gameScene.addChild(time);
     gameScene.addChild(player);
 
     gameScene.start = () =>
     {
+        elapsedTimeListener.setValue(0);
         player.resetState();
         //update on start because why not
         fps.visible = showFPS;
     };
     gameScene.update = (dt) => {
+        elapsedTimeListener.setValue(elapsedTimeListener.getValue() + dt);
         buildingManager.spawnTimer.setValue(buildingManager.spawnTimer.getValue() - dt);
         buildingManager.updateMovement(dt);
         player.update(dt);
@@ -307,9 +338,7 @@ async function __startApp()
     }
     gameScene.onMouseMoveEvent = (e) =>
     {
-        if (player.PlayerState.getValue() != player.PLAYER_STATE.CHARGING)
-            return;
-
+        player.MousePosition = new Vector2(e.x, e.y);
     }
 
 
@@ -319,6 +348,7 @@ async function __startApp()
     {
         scenes.currentScene.onKeyboardDownEvent(e);
     });
+    
     window.addEventListener("keyup", (e) => 
     {
         scenes.currentScene.onKeyboardUpEvent(e);
