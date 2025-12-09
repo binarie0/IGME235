@@ -1,6 +1,6 @@
 "use strict";
-const WIDTH = 1280;
-const HEIGHT = 720;
+const WIDTH = 1024;
+const HEIGHT = 768;
 
 const TILE_SIZE = 32;
 
@@ -85,6 +85,13 @@ async function __startApp()
     if (!started) 
         return;
 
+    let jumpSound = new Howl({
+        src: ["media/jump.ogg"],
+    });
+
+
+
+
     //grab stage
     stage = app.stage;
     
@@ -113,7 +120,7 @@ async function __startApp()
     let titleLabelStyle = 
     {
         fill: lightGreen,
-        fontSize: 256,
+        fontSize: 230,
         fontFamily: "SuperAdorable",
         stroke: 0x000000,
         strokeThickness: 5
@@ -154,30 +161,30 @@ async function __startApp()
     let startScene = scenes.createNewScene("start");
 
     let title = new PIXI.Text("Ribbit!", titleLabelStyle);
-    centerElementX(title, WIDTH);
+    centerElementX(title);
     title.y = 20;
     startScene.addChild(title);
 
     let startButton = new PIXI.Text("Start Game!", stdButtonStyle);
-    centerElementX(startButton, WIDTH);
-    centerElementY(startButton, HEIGHT);
+    centerElementX(startButton);
+    centerElementY(startButton);
     startButton.interactive = true;
     startButton.buttonMode = true;
-    defaultButtonLogic(startButton, lightGreen, stdButtonStyle.fill, (e) => scenes.setScene("game"));
+    defaultButtonLogic(startButton, lightGreen, stdButtonStyle.fill, (e) => switchScene("game"));
 
     let optionsMenu = new PIXI.Text("Options", stdButtonStyle);
-    centerElementX(optionsMenu, WIDTH);
+    centerElementX(optionsMenu);
     optionsMenu.y = 420;
     optionsMenu.interactive = true;
     optionsMenu.buttonMode = true;
-    defaultButtonLogic(optionsMenu, lightGreen, stdButtonStyle.fill, (e) => scenes.setScene("options"));
+    defaultButtonLogic(optionsMenu, lightGreen, stdButtonStyle.fill, (e) => switchScene("options"));
 
     let credits = new PIXI.Text("Credits", stdButtonStyle);
-    centerElementX(credits, WIDTH);
+    centerElementX(credits);
     credits.y = 540;
     credits.interactive = true;
     credits.buttonMode = true;
-    defaultButtonLogic(credits, lightGreen, stdButtonStyle.fill, (e) => scenes.setScene("credits"));
+    defaultButtonLogic(credits, lightGreen, stdButtonStyle.fill, (e) => switchScene("credits"));
 
     startScene.addChild(startButton);
     startScene.addChild(optionsMenu);
@@ -189,11 +196,11 @@ async function __startApp()
     let optionsScene = scenes.createNewScene("options");
 
     title = new PIXI.Text("Options", titleLabelStyle);
-    centerElementX(title, WIDTH);
+    centerElementX(title);
     title.y = 20;
     
     let fpsButton = new PIXI.Text("Show FPS", toggleButtonStyle);
-    centerElementX(fpsButton, WIDTH);
+    centerElementX(fpsButton);
     fpsButton.y = 300;
     fpsButton.interactive = true;
     fpsButton.buttonMode = true;
@@ -216,11 +223,11 @@ async function __startApp()
     
     
     let backButton = new PIXI.Text("Go Back", stdButtonStyle);
-    centerElementX(backButton, WIDTH);
+    centerElementX(backButton);
     backButton.y = 600;
     backButton.interactive = true;
     backButton.buttonMode = true;
-    defaultButtonLogic(backButton, lightGreen, stdButtonStyle.fill, (e) => scenes.setScene("start"));
+    defaultButtonLogic(backButton, lightGreen, stdButtonStyle.fill, (e) => switchScene("start"));
 
     optionsScene.addChild(title);
     optionsScene.addChild(fpsButton);
@@ -233,23 +240,23 @@ async function __startApp()
     let creditsScene = scenes.createNewScene("credits");
 
     title = new PIXI.Text("Credits", titleLabelStyle);
-    centerElementX(title, WIDTH);
+    centerElementX(title);
     title.y = 20;
 
-    let creds = new PIXI.Text("A project by Zach Ayers", stdLabelStyle);
-    centerElementX(creds, WIDTH);
+    let creds = new PIXI.Text("A project by Zach A", stdLabelStyle);
+    centerElementX(creds);
     creds.y = HEIGHT/2 - 30;
     
     let otherCreds = new PIXI.Text("Made for IGME 235 | Intro to Game Web Tech", stdLabelStyle);
-    centerElementX(otherCreds, WIDTH);
+    centerElementX(otherCreds);
     otherCreds.y = HEIGHT/2 + 30;
 
     backButton = new PIXI.Text("Go Back", stdButtonStyle);
-    centerElementX(backButton, WIDTH);
+    centerElementX(backButton);
     backButton.y = 600;
     backButton.interactive = true;
     backButton.buttonMode = true;
-    defaultButtonLogic(backButton, lightGreen, stdButtonStyle.fill, (e) => scenes.setScene("start"));
+    defaultButtonLogic(backButton, lightGreen, stdButtonStyle.fill, (e) => switchScene("start"));
     
 
 
@@ -303,6 +310,8 @@ async function __startApp()
         console.log(`Charge Time: ${time}`);
     })
 
+    player.OnPlayerDead = () => switchScene("death");
+    player.OnJump = () => jumpSound.play();
 
     gameScene.addChild(fps);
     gameScene.addChild(time);
@@ -316,6 +325,8 @@ async function __startApp()
         player.resetState();
         //update on start because why not
         fps.visible = showFPS;
+        app.renderer.background.color = 0x000000;
+        buildingManager.reset();
     };
     gameScene.update = (dt) => {
 
@@ -355,6 +366,47 @@ async function __startApp()
     }
 
 
+//#region DEATH SCREEN
+
+    let deathScreen = scenes.createNewScene("death");
+    
+    title = new PIXI.Text("You Died!", titleLabelStyle);
+    centerElementX(title);
+    title.y = 20;
+
+    deathScreen.start = () =>
+    {
+        app.renderer.background.color = 0x005217;
+    }
+    
+
+    let retry = new PIXI.Text("Retry", stdButtonStyle);
+    centerElementX(retry);
+    retry.y = 400;
+    retry.interactive = true;
+    retry.buttonMode = true;
+    defaultButtonLogic(retry, lightGreen, stdButtonStyle.fill, (e) => switchScene("game"));
+
+    backButton = new PIXI.Text("Main Menu", stdButtonStyle);
+    centerElementX(backButton);
+    backButton.y = 600;
+    backButton.interactive = true;
+    backButton.buttonMode = true;
+    defaultButtonLogic(backButton, lightGreen, stdButtonStyle.fill, (e) => switchScene("start"));
+
+    deathScreen.addChild(title);
+    deathScreen.addChild(retry);
+    deathScreen.addChild(backButton);
+
+
+
+//#endregion
+
+
+
+
+
+
 
     //WINDOW FUNCTIONS TO PASS DOWN TO CHILD SCENES!
     window.addEventListener("keydown", (e) =>
@@ -387,7 +439,7 @@ function gameLoop()
     scenes.update(dt);
 }
 
-async function switchScene(id)
+async function switchScene(id = "")
 {
     //set the scene
     await scenes.setScene(id);

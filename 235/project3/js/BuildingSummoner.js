@@ -13,7 +13,12 @@ class BuildingSummoner extends PIXI.Container {
             if (e <= 0) this.#addBuilding();
         });
     }
-
+    
+    reset()
+    {
+        this.buildings.forEach(b => this.scene.removeChild(b));
+        this.buildings = [];
+    }
 
 
 
@@ -24,7 +29,7 @@ class BuildingSummoner extends PIXI.Container {
         console.log(a);
 
         let b = new Building(a, 32, 32);
-        b.position.set(1280, 720);
+        b.position.set(WIDTH, HEIGHT);
 
         if (this.buildings.length > 0) {
             b.buildHeight.setValue(random(2, 12));
@@ -49,7 +54,6 @@ class BuildingSummoner extends PIXI.Container {
             //remove child if the building is out of zone
             if (b.x < -b.width) {
                 this.scene.removeChild(b);
-
             }
         });
 

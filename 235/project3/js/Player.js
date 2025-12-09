@@ -16,6 +16,9 @@ class Player extends PIXI.Container
     //this is so things can tie themselves to changes in player state
     PlayerState = new Listener(this.PLAYER_STATE.STATIONARY);
     
+    OnPlayerDead = () => {};
+    OnJump = () => {};
+    
     //this is so things can tie themselves to changes in chargetime
     ChargeTime = new Listener(0);
     #canCharge = false;
@@ -39,6 +42,8 @@ class Player extends PIXI.Container
         //stationary (idle) x8
         //charging x8
         //jumping x8
+        this.#offsetX = width/2;
+        this.#offsetY = height/2;
         for (let i = 0; i < 3; i++)
         {
             let textureArray = [];
@@ -51,15 +56,15 @@ class Player extends PIXI.Container
                 textureArray.push(frame);
             }
             let anim = new PIXI.AnimatedSprite(textureArray);
-            anim.anchor.set(0.5, 0.5);
-            this.#offsetX = width/2;
-            this.#offsetY = height/2;
+            //anim.anchor.set(0.5, 0.5);
+            
             if (i != 0) anim.loop = false;
             anim.visible = false;
-            console.log(anim);
+            //console.log(anim);
             this.addChild(anim);
         }
-        this.position = {x:64, y: 720 - 64};
+        this.pivot.set(width*0.5, height*0.5);
+        //this.position = new Vector2(this.#offsetX, HEIGHT - this.#offsetY);
         this.PlayerState.addCallback((state) => this.#updatePlayer(state));
     }
 
@@ -102,6 +107,8 @@ class Player extends PIXI.Container
 
     resetState(state)
     {
+        this.position = new Vector2(this.#offsetX + 2, HEIGHT - this.#offsetY);
+        this.Velocity = Vector2.ZERO;
         //force reset state
         this.PlayerState.setValue(this.PLAYER_STATE.STATIONARY);
         this.#updatePlayer(this.PLAYER_STATE.STATIONARY);
@@ -121,6 +128,7 @@ class Player extends PIXI.Container
                 let total = Math.min(ct + dt, this.MAX_CHARGE_TIME);
                 this.ChargeTime.setValue(total);
             }
+            
         }
 
         let pos = this.position;
@@ -143,9 +151,9 @@ class Player extends PIXI.Container
             this.position.y = this.#offsetY;
             this.Velocity = this.Velocity.componentVectors.x;
         }
-        if (this.position.x < this.#offsetX)
+        if (this.position.x < -this.#offsetX)
         {
-            //TODO: Add death state
+            this.OnPlayerDead();
         }
         if (this.position.x > WIDTH - this.#offsetX)
         {
@@ -173,7 +181,8 @@ class Player extends PIXI.Container
             this.ChargeTime.setValue(0);
             totalTime = Math.max(0.1, totalTime);
             
-            let dir = Vector2.sub(this.MousePosition, this.position);
+            console.log(this.MousePosition);
+            let dir = Vector2.sub(this.MousePosition, Vector2.add(this.position, this.pivot));
             dir = dir.normalized;
             if (dir.y > 0) 
             {
@@ -185,6 +194,7 @@ class Player extends PIXI.Container
             
 
             this.Velocity = Vector2.mult(Math.sqrt(totalTime) * this.POWER, dir);
+            this.OnJump();
 
 
         }

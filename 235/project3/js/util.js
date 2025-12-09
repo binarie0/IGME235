@@ -2,14 +2,14 @@ function clamp(num, lower, upper) {
     return Math.min(Math.max(num, lower), upper);
 }
 
-function centerElementX(e = new PIXI.Text(""), sceneWidth)
+function centerElementX(e = new PIXI.Text(""))
 {
-    e.x = sceneWidth/2 - e.width/2
+    e.x = WIDTH/2 - e.width/2
 }
 
-function centerElementY(e = new PIXI.Text(""), sceneHeight)
+function centerElementY(e = new PIXI.Text(""))
 {
-    e.y = sceneHeight/2 - e.height/2;
+    e.y = HEIGHT/2 - e.height/2;
 }
 
 function defaultButtonLogic(element, hoverColor, defaultColor, onclick = (event) => {})
