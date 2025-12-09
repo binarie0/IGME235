@@ -89,6 +89,10 @@ async function __startApp()
         src: ["media/jump.ogg"],
     });
 
+    let confirmSound = new Howl({
+        src: ["media/confirm.mp3"]
+    });
+
 
 
 
@@ -170,7 +174,12 @@ async function __startApp()
     centerElementY(startButton);
     startButton.interactive = true;
     startButton.buttonMode = true;
-    defaultButtonLogic(startButton, lightGreen, stdButtonStyle.fill, (e) => switchScene("game"));
+    defaultButtonLogic(startButton, lightGreen, stdButtonStyle.fill, (e) => 
+    {
+        switchScene("game");
+        confirmSound.play();
+        
+    });
 
     let optionsMenu = new PIXI.Text("Options", stdButtonStyle);
     centerElementX(optionsMenu);
